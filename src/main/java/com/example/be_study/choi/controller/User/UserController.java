@@ -1,9 +1,9 @@
-package com.example.be_study.choi.controller;
+package com.example.be_study.choi.controller.User;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/vq/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 }
