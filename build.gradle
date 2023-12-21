@@ -18,6 +18,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
@@ -30,6 +31,9 @@ dependencies {
     // JSP
     implementation 'javax.servlet:jstl:1.2'
     implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
+
+    // H2 Database
+    runtimeOnly 'com.h2database:h2'
 
 }
 
