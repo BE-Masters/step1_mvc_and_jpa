@@ -1,6 +1,6 @@
-package com.example.be_study.yugyeong.application;
+package com.example.be_study.yugyeong.mvc.application;
 
-import com.example.be_study.yugyeong.dto.UserProfileRequest;
+import com.example.be_study.yugyeong.mvc.dto.UserProfileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

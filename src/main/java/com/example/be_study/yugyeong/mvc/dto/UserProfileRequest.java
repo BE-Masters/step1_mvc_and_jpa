@@ -1,4 +1,4 @@
-package com.example.be_study.yugyeong.dto;
+package com.example.be_study.yugyeong.mvc.dto;
 
 import lombok.*;
 

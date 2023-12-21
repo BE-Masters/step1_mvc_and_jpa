@@ -1,6 +1,6 @@
-package com.example.be_study.yugyeong.controller;
+package com.example.be_study.yugyeong.mvc.controller;
 
-import com.example.be_study.yugyeong.application.HomeService;
+import com.example.be_study.yugyeong.mvc.application.HomeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
