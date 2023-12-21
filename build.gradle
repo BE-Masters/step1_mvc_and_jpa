@@ -20,6 +20,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // JSP
+    implementation 'javax.servlet:jstl:1.2'
+    implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
+
 }
 
 tasks.named('test') {
