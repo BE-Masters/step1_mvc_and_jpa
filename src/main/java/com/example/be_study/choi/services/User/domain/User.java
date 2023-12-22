@@ -16,9 +16,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "user")
 @ToString
-
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +59,6 @@ public class User {
     @Column(name = "user_type" , nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
-
 
     @Column(name = "created_at")
     @CreationTimestamp
