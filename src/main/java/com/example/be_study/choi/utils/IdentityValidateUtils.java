@@ -11,7 +11,7 @@ public class IdentityValidateUtils {
 
     //Error Message
     public static String ERROR_NULL_OR_EMPTY_IDENTITY = "주민등록번호가 Null이거나 비어있습니다.";
-    public static String ERROR_LENGTH_IDENTITY = "주민등록번호가 Null이거나 비어있습니다.";
+    public static String ERROR_LENGTH_IDENTITY = "주민등록번호 자릿수가 올바르지 않습니다.";
     public static String ERROR_CONTAIN_CHARACTER = "주민등록번호에 숫자가 아닌 값이 섞여있습니다.";
     public static String ERROR_BAD_END_FIRST_WORD = "주민등록번호의 정보가 잘못됬습니다 - 내국인 외국인인지의 범위에 하나도 포함되지 않음";
 

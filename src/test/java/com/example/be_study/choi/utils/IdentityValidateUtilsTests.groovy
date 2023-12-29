@@ -40,4 +40,21 @@ class IdentityValidateUtilsTests extends Specification {
                 '9302258111111'
         ]
     }
+
+    def "주민등록번호가 자리수가 안맞으면 에러를 표시합니다."() {
+        when:
+        IdentityValidateUtils.isIdentityForeignerUser(identity)
+
+        then:
+        def e = thrown(IllegalArgumentException.class)
+        IdentityValidateUtils.ERROR_LENGTH_IDENTITY == e.message
+
+        where:
+        identity << [
+                '930225511111',
+                '93022561111',
+                '930225711',
+                '93022581'
+        ]
+    }
 }
