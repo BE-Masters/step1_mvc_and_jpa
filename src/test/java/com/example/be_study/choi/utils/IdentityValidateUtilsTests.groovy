@@ -1,5 +1,6 @@
 package com.example.be_study.choi.utils
 
+import com.example.be_study.utils.IdentityValidateUtils
 import spock.lang.Specification
 
 class IdentityValidateUtilsTests extends Specification {

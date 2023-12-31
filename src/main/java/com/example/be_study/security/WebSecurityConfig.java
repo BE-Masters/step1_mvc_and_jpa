@@ -1,4 +1,4 @@
-package com.example.be_study.yugyeong.config;
+package com.example.be_study.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
