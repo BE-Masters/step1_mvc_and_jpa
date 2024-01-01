@@ -36,8 +36,13 @@ dependencies {
     implementation 'javax.servlet:jstl:1.2'
     implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
 
-    // H2 Database
-    runtimeOnly 'com.h2database:h2'
+    //MariaDB
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.2'
+
+
+    // flyway
+    implementation 'org.flywaydb:flyway-core'
+
 }
 
 tasks.named('test') {

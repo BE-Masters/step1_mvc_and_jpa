@@ -1,4 +1,4 @@
-package com.example.be_study.choi.utils;
+package com.example.be_study.utils;
 
 import org.springframework.util.ObjectUtils;
 
