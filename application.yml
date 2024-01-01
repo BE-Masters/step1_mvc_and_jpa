@@ -29,4 +29,5 @@ spring:
         show_sql: true
 
   flyway:
-    enabled: true
+    enabled: false
+    outOfOrder: true
