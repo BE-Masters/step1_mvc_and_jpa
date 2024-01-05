@@ -15,7 +15,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
 
         http.httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable); // 로컬 환경에서는 기본 인증과 CSRF 보호 비활성화
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
@@ -23,7 +23,7 @@ public class WebSecurityConfig {
     @Profile("prod")
     public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable); // TODO 프로덕션 환경에 맞는 보안 구성 추가해야댐
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
