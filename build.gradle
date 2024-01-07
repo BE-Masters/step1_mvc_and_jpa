@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.4'
+    id "org.flywaydb.flyway" version "7.2.0"
 }
 
 group = 'com.example'
@@ -43,6 +44,12 @@ dependencies {
     // flyway
     implementation 'org.flywaydb:flyway-mysql'
 
+}
+
+flyway {
+    url = 'jdbc:mysql://127.0.0.1:3306/house?useSSL=false&allowPublicKeyRetrieval=true'
+    user = 'bestudy'
+    password = 'bestudy'
 }
 
 tasks.named('test') {
