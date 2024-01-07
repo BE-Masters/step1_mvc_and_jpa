@@ -2,9 +2,10 @@ package com.example.be_study.service.base;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,19 +14,15 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractBaseEntity {
+public abstract class AbstractBaseTimeEntity extends AbstractBaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id = 0L;
+    @CreatedBy
+    @Column(name = "created_by", nullable = false)
+    private Long createdBy;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @LastModifiedBy
+    @Column(name = "modified_by", nullable = false)
+    private Long modifiedBy;
 
-    @LastModifiedDate
-    @Column(name = "modified_at", nullable = false)
-    private LocalDateTime modifiedAt;
 }
