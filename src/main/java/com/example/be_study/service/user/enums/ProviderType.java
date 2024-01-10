@@ -1,5 +1,8 @@
 package com.example.be_study.service.user.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ProviderType {
     KAKAO("카카오"),
     NAVER("네이버"),

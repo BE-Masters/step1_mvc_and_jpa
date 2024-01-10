@@ -4,7 +4,7 @@ CREATE TABLE user
 	user_id 		bigint unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '아이디',
 	user_email 		varchar(100) NULL UNIQUE COMMENT '이메일',
 	user_profile            longtext NULL COMMENT '유저 프로필 이미지',
-	user_password  		varchar(255) NOT NULL COMMENT '패스워드',
+	user_password  		varchar(255) NULL COMMENT '패스워드',
 	user_type               varchar(30) NOT NULL default 'user' COMMENT '사용자 타입(사용자, 관리자)',
 	user_nickname 		varchar(30) NOT NULL UNIQUE COMMENT '유저 닉네임',
 	provider_type           varchar(30) NOT NULL COMMENT '로그인 타입(KAKAO, NAVER, Facebook, Origin)',

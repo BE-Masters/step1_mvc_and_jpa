@@ -15,13 +15,15 @@ import lombok.Setter;
 @Table(name = "user")
 @NoArgsConstructor
 public class User extends AbstractBaseEntity {
+    @AttributeOverride(name = "id", column = @Column(name = "user_id"))
+
     @Column(name = "user_profile", nullable = true)
     private String userProfile;
 
     @Column(name = "user_email", nullable = true)
     private String userEmail;
 
-    @Column(name = "user_password", nullable = false)
+    @Column(name = "user_password", nullable = true)
     private String userPassword;
 
     @Enumerated(EnumType.STRING)
@@ -44,8 +46,6 @@ public class User extends AbstractBaseEntity {
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
 
-    @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
-    private Boolean deleted;
 
     @Builder
     public User(String userProfile,
@@ -56,8 +56,7 @@ public class User extends AbstractBaseEntity {
                 ProviderType providerType,
                 String providerKey,
                 String userLastLoginDate,
-                Boolean dormancy,
-                Boolean deleted
+                Boolean dormancy
     ) {
         this.userProfile = userProfile;
         this.userEmail = userEmail;
@@ -68,6 +67,18 @@ public class User extends AbstractBaseEntity {
         this.providerKey = providerKey;
         this.userLastLoginDate = userLastLoginDate;
         this.dormancy = dormancy;
-        this.deleted = deleted;
     }
+
+    public static User ofKakao() {
+        return User.builder()
+                .build();
+
+    }
+
+    public static User ofOrigin() {
+        return User.builder()
+                .build();
+
+    }
+
 }
