@@ -33,11 +33,11 @@ public class PolicyAgree extends AbstractBaseEntity {
         this.userId = userId;
     }
 
-    public static PolicyAgree of() {
+    public static PolicyAgree of(Long userId, PolicyHistory policyHistory) {
         return PolicyAgree.builder()
-                /*.policyType()
-                .policyHistoryId()
-                .userId()*/
+                .policyType(policyHistory.getPolicyType())
+                .policyHistoryId(policyHistory.getId())
+                .userId(userId)
                 .build();
     }
 }
