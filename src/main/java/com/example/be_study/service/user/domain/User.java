@@ -1,6 +1,6 @@
 package com.example.be_study.service.user.domain;
 
-import com.example.be_study.service.base.AbstractBaseEntity;
+import com.example.be_study.service.base.AbstractBaseUserDeleteEntity;
 import com.example.be_study.service.user.enums.ProviderType;
 import com.example.be_study.service.user.enums.UserType;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User extends AbstractBaseEntity {
+public class User extends AbstractBaseUserDeleteEntity {
     @AttributeOverride(name = "id", column = @Column(name = "user_id"))
 
     @Column(name = "user_profile", nullable = true)
