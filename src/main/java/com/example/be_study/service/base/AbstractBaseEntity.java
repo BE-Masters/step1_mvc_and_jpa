@@ -28,4 +28,5 @@ public abstract class AbstractBaseEntity {
     @LastModifiedDate
     @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
+
 }
