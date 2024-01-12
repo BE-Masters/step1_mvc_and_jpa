@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    public static String[] PERMIT_ALL = {
+    private final static String[] PERMIT_ALL = {
             "/login"
     };
 
@@ -33,7 +33,11 @@ public class WebSecurityConfig {
     @Profile("prod")
     public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
+                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
+                        .requestMatchers(PERMIT_ALL).permitAll()
+                        .anyRequest().hasAnyRole("BASIC_USER", "ADMIN"));
         return http.build();
     }
 
