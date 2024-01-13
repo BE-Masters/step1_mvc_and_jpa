@@ -26,15 +26,18 @@ public class PolicyAgreeService {
 
     @Transactional(readOnly = false)
     public List<PolicyAgree> saveSignUpPolicy(Long userId, List<PolicyType> policyTypes) {
-        if (ObjectUtils.isEmpty(userId)) {
-            throw new IllegalArgumentException("user id 값이 null 입니다");
+        if (ObjectUtils.isEmpty(policyTypes)) {
+            throw new IllegalArgumentException("policyTypes이 Null 입니다.");
         }
 
-        List<PolicyType> policyAgreeList = Stream.of(PolicyType.SIGN_ALL_LIST, policyTypes)
+        List<PolicyType> policyAgreeList = Stream.of(PolicyType.SIGN_REQUIRED_LIST, policyTypes)
                 .flatMap(List::stream).toList();
 
         List<PolicyHistory> policyHistories = policyHistoryRepository.findAllByPolicyTypeInAndIsLatestRevision(policyAgreeList, true);
 
+        if (ObjectUtils.isEmpty(policyHistories)) {
+            return null;
+        }
         List<PolicyAgree> saveList = policyHistories.stream().map(it ->
                 PolicyAgree.of(userId, it)
         ).toList();
