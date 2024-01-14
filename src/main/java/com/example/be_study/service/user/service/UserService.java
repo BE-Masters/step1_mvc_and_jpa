@@ -21,6 +21,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<User> findAllByUserIdIn(Collection<Long> userIds) {
-        return userRepository.findAllByUserIdIn(userIds);
+        return userRepository.findAllByIdIn(userIds);
     }
 }

@@ -13,9 +13,9 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "user")
+@AttributeOverride(name = "id", column = @Column(name = "user_id"))
 @NoArgsConstructor
 public class User extends AbstractBaseUserDeleteEntity {
-    @AttributeOverride(name = "id", column = @Column(name = "user_id"))
 
     @Column(name = "user_profile", nullable = true)
     private String userProfile;
