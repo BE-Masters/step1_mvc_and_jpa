@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PolicyHistoryService {
-    private PolicyHistoryRepository policyHistoryRepository;
+    private final PolicyHistoryRepository policyHistoryRepository;
 
     public PolicyHistoryService(PolicyHistoryRepository policyHistoryRepository) {
         this.policyHistoryRepository = policyHistoryRepository;

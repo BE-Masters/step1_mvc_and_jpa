@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity(name = "policy_agree")
 public class PolicyAgree extends AbstractBaseEntity {
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "policy_type", nullable = false)
     private PolicyType policyType;
 

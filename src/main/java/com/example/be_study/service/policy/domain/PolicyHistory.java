@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 public class PolicyHistory extends AbstractBaseUserByEntity {
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "policy_type", nullable = false)
     private PolicyType policyType;
 
