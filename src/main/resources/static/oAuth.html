@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kakao Login</title>
+</head>
+<body>
+
+<!-- 로그인 성공 시 보여줄 페이지 -->
+<div id="login-success" style="display:none;">
+  <h1>로그인 성공</h1>
+  <p>환영합니다!</p>
+</div>
+<script>
+        // URL에서 'code' 쿼리 파라미터를 찾는 함수
+        function getQueryParam(param) {
+            var search = window.location.search.substring(1);
+            var variables = search.split('&');
+            for (var i = 0; i < variables.length; i++) {
+                var pair = variables[i].split('=');
+                if (pair[0] == param) {
+                    return pair[1];
+                }
+            }
+            return false;
+        }
+
+       // 페이지 로드 시 'code' 파라미터를 확인하고 로그인 성공 메시지 표시
+        window.onload = function() {
+             // 페이지 로드 확인을 위한 알림
+            var code = getQueryParam('code');
+
+            fetch('http://localhost:8080/oauth/login/kakao/'+ code) // 여기에 원하는 API 엔드포인트 주소를 넣으세요.
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+            if (code) {
+                document.getElementById('login-success').style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
