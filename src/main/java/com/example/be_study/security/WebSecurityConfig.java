@@ -1,8 +1,8 @@
 package com.example.be_study.security;
 
 import com.example.be_study.common.jwt.JwtAuthenticationFilter;
+import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,14 +15,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final JwtTokenUtil jwtTokenUtil;
 
+    private final JwtService jwtService;
+
     private final static String[] PERMIT_ALL = {
             "/login"
     };
+
+    public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtService = jwtService;
+    }
 
     @Bean
     @Profile("local")
@@ -34,7 +40,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -48,7 +54,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

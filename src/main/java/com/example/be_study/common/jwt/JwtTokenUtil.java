@@ -2,14 +2,11 @@ package com.example.be_study.common.jwt;
 
 import com.example.be_study.common.jwt.properties.JwtProperties;
 import com.example.be_study.service.user.domain.User;
-import com.example.be_study.service.user.domain.UserRepository;
 import com.example.be_study.service.user.enums.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,24 +17,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class JwtTokenUtil {
 
     private final JwtProperties jwtProperties;
 
-    private String accessTokenKey;
-
-    private String refreshTokenKey;
-
-    private final UserRepository userRepository;
-
-    /**
-     *  객체 초기화 - Base64 인코딩
-     */
-    @PostConstruct
-    protected void init() {
-        accessTokenKey = Base64.getEncoder().encodeToString(jwtProperties.getAccessTokenKey().getBytes());
-        refreshTokenKey = Base64.getEncoder().encodeToString(jwtProperties.getRefreshTokenKey().getBytes());
+    public JwtTokenUtil(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
     }
 
     public String createToken(User user, TokenType tokenType) {
@@ -48,7 +33,7 @@ public class JwtTokenUtil {
      *  JWT 생성
      */
     private String createToken(Long userId, UserType role, TokenType tokenType) {
-        String secretKey = tokenType.equals(TokenType.AccessToken) ? accessTokenKey : refreshTokenKey;
+        String secretKey = TokenType.AccessToken.equals(tokenType) ? jwtProperties.getAccessTokenKey() : jwtProperties.getRefreshTokenKey();
 
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId)); // JWT payload 에 저장되는 정보 단위
         claims.put("roles", role);
@@ -63,7 +48,7 @@ public class JwtTokenUtil {
     }
 
     public Claims getClaims(String token, TokenType tokenType) {
-        String secretKey = tokenType.equals(TokenType.AccessToken) ? accessTokenKey : refreshTokenKey;
+        String secretKey = TokenType.AccessToken.equals(tokenType) ? jwtProperties.getAccessTokenKey() : jwtProperties.getRefreshTokenKey();
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
@@ -87,10 +72,16 @@ public class JwtTokenUtil {
      */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.split(" ")[1].trim();
+
+        if (!StringUtils.hasText(bearerToken)) {
+            return null;
         }
-        return null;
+
+        if (!bearerToken.startsWith("Bearer ")) {
+            return null;
+        }
+
+        return bearerToken.split(" ")[1].trim();
     }
 
     /**
@@ -117,21 +108,5 @@ public class JwtTokenUtil {
      */
     public UserType getRoles(String token, TokenType tokenType) {
         return UserType.valueOf(String.valueOf(this.getClaims(token, tokenType).get("roles")));
-    }
-
-    /**
-     *  UserType 확인
-     */
-    public boolean isUnauthorized(String token, TokenType tokenType) {
-        Long userId = this.getUserId(token, tokenType);
-        UserType roles = this.getRoles(token, tokenType);
-
-        switch (roles) {
-            case BASIC_USER:
-                User user = userRepository.findById(userId).orElse(null);
-                return user == null;
-            default:
-                return true;
-        }
     }
 }
