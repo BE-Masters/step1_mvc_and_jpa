@@ -5,26 +5,37 @@ import com.example.be_study.service.user.domain.User;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.example.be_study.service.user.service.OauthService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
-@RequestMapping("/oauth")
+import java.io.IOException;
+
+@RequestMapping("/api/v1/oauth")
 @RestController
 public class OauthController {
     private final OauthService oauthService;
 
+    public OauthController(OauthService oauthService) {
+        this.oauthService = oauthService;
+    }
+
     @SneakyThrows
     @GetMapping("/{oauthServerType}")
-    ResponseEntity<Void> redirectAuthCodeRequestUrl(
+    public ResponseEntity<DataResponse<Void>> redirectAuthCodeRequestUrl(
             @PathVariable OauthServerType oauthServerType,
             HttpServletResponse response
     ) {
-        String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
-        response.sendRedirect(redirectUrl);
-        return ResponseEntity.ok().build();
+        try {
+            String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
+            response.sendRedirect(redirectUrl);
+            return ResponseEntity.ok(new DataResponse<>(200, "successful", null));
+        } catch (IOException e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new DataResponse<>(500, "Redirect failed: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/login/{oauthServerType}/{code}")
