@@ -1,11 +1,23 @@
 package com.example.be_study.common.response;
 
-public class ResponseMessage {
+import lombok.Getter;
 
-    public static final String SUCCESS_MESSAGE = "API Call Successful";
+@Getter
+public enum ResponseMessage {
 
-    public static final String BAD_REQUEST_MESSAGE = "Bad Request";
+    SUCCESS_MESSAGE(200, "API Call Successful"),
+    BAD_REQUEST_MESSAGE(400, "Bad Request"),
+    ALREADY_EXIST_NICKNAME(400, "사용 중인 별명입니다."),
+    ALREADY_EXIST_EMAIL(400, "이미 가입된 이메일입니다."),
+    TOKEN_EXPIRED_MESSAGE(400, "Token Expired Error");
 
-    public static final String TOKEN_EXPIRED_MESSAGE = "Token Expired Error";
+    private final int responseStatus;
+
+    private final String responseMessage;
+
+    ResponseMessage(int responseStatus, String responseMessage) {
+        this.responseStatus = responseStatus;
+        this.responseMessage = responseMessage;
+    }
 
 }

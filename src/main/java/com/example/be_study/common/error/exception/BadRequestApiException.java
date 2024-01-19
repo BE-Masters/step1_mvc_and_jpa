@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class BadRequestApiException extends RuntimeException {
 
-    private final ResponseMessage code;
+    private final ResponseMessage responseMessage;
 
-    public BadRequestApiException(ResponseMessage code, String message) {
-        super(message);
-        this.code = code;
+    public BadRequestApiException(ResponseMessage responseMessage) {
+        super(responseMessage.getResponseMessage());
+        this.responseMessage = responseMessage;
     }
 }
