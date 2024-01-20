@@ -29,11 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtTokenUtil.resolveToken(request); // Header 에서 토큰 값 가져오기
 
-        debugLogging(request);
-        tokenValidation(token);
+//        debugLogging(request);
+//        tokenValidation(token);
 
-        Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }

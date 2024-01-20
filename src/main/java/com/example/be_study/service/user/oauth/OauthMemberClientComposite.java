@@ -2,7 +2,7 @@ package com.example.be_study.service.user.oauth;
 
 import com.example.be_study.service.user.domain.User;
 import com.example.be_study.service.user.enums.OauthServerType;
-import com.google.common.util.concurrent.AtomicLongMap;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

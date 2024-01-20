@@ -2,6 +2,7 @@ package com.example.be_study.controller.user;
 
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.service.user.domain.User;
+import com.example.be_study.service.user.enums.KakaoOauthResponseCode;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.example.be_study.service.user.service.OauthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,27 +24,20 @@ public class OauthController {
 
     @SneakyThrows
     @GetMapping("/{oauthServerType}")
-    public ResponseEntity<DataResponse<Void>> redirectAuthCodeRequestUrl(
-            @PathVariable OauthServerType oauthServerType,
-            HttpServletResponse response
+    public ResponseEntity<KakaoOauthResponseCode> redirectAuthCodeRequestUrl(
+            @PathVariable("oauthServerType") OauthServerType oauthServerType, HttpServletResponse response
     ) {
-        try {
-            String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
-            response.sendRedirect(redirectUrl);
-            return ResponseEntity.ok(new DataResponse<>(200, "successful", null));
-        } catch (IOException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new DataResponse<>(500, "Redirect failed: " + e.getMessage(), null));
-        }
+        String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
+        response.sendRedirect(redirectUrl);
+        return ResponseEntity.ok(KakaoOauthResponseCode.OAUTH_AUTHORIZE_SUCCESS);
     }
 
     @GetMapping("/login/{oauthServerType}/{code}")
-    public DataResponse<User> login(
+    public ResponseEntity<KakaoOauthResponseCode> login(
             @PathVariable("oauthServerType") OauthServerType oauthServerType,
             @PathVariable("code") String code
     ) {
-        return new DataResponse<>(200, "success", oauthService.login(oauthServerType, code));
+        return ResponseEntity.ok(KakaoOauthResponseCode.LOGIN_SUCCESS);
     }
 
 }
