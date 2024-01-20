@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table
 @AttributeOverride(name = "id", column = @Column(name = "policy_history_id"))
-@Entity
+@Entity(name = "policy_history")
 public class PolicyHistory extends AbstractBaseUserByEntity {
 
     @Enumerated(EnumType.STRING)

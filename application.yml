@@ -1,26 +1,13 @@
 # 기본 공통 설정
-server:
-  port: 8080
-
-spring:
-  application:
-    name: BeStudyApplication
-
-logging:
-  level:
-    root: info
-    org.springframework: info
-    com.example.be_study: debug
-
-jwt:
-  access-token-key: ${ACCESS_TOKEN_KEY}
-  refresh-token-key: ${REFRESH_TOKEN_KEY}
-
-# Local 프로필
----
 spring:
   profiles:
     active: local
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/house?useSSL=false&allowPublicKeyRetrieval=true
@@ -40,12 +27,26 @@ spring:
     enabled: false
     outOfOrder: true
 
+  application:
+    name: BeStudyApplication
+
+logging:
+  level:
+    root: info
+
+jwt:
+  access-token-key: ${ACCESS_TOKEN_KEY}
+  refresh-token-key: ${REFRESH_TOKEN_KEY}
+
+server:
+  port: 8080
 
 # prod 프로필
 ---
 spring:
-  profiles:
-    active: prod
+  config:
+    activate:
+      on-profile: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/house?useSSL=false&allowPublicKeyRetrieval=true
