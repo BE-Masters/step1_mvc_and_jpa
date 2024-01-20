@@ -12,6 +12,10 @@ logging:
     org.springframework: info
     com.example.be_study: debug
 
+jwt:
+  access-token-key: ${ACCESS_TOKEN_KEY}
+  refresh-token-key: ${REFRESH_TOKEN_KEY}
+
 # Local 프로필
 ---
 spring:
