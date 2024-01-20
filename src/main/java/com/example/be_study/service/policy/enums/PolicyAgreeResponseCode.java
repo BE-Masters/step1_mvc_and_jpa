@@ -1,8 +1,6 @@
 package com.example.be_study.service.policy.enums;
 
-import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.common.response.DataResponseCode;
-import lombok.Getter;
 
 public enum PolicyAgreeResponseCode implements DataResponseCode {
     SUCCESS(200,"정상 처리 완료"),
