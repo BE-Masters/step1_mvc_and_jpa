@@ -29,6 +29,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtTokenUtil.resolveToken(request); // Header 에서 토큰 값 가져오기
 
+        debugLogging(request);
+        tokenValidation(token);
+
+        Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        filterChain.doFilter(request, response);
+    }
+
+    private void debugLogging(HttpServletRequest request) {
+        log.info("<< 요청  Request (" + request.getMethod() + ") " + request.getHeader("Device-Type") + " - " + request.getRequestURL() + ">>");
+    }
+
+    private void tokenValidation(String token) {
         if (!StringUtils.isNotBlank(token)) { // 토큰이 없는 경우
             throw new TokenExpiredException();
         }
@@ -40,11 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtService.isUnauthorized(token, TokenType.AccessToken)) { // 권한이 없는 경우
             throw new TokenExpiredException();
         }
-
-        Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        filterChain.doFilter(request, response);
     }
 
 }
