@@ -30,6 +30,12 @@ public class WebSecurityConfig {
         this.jwtService = jwtService;
     }
 
+    public HttpSecurity addExceptionHandling(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity.exceptionHandling((authenticationManager) -> authenticationManager
+                .authenticationEntryPoint(new WebAuthenticationEntryPoint())
+        );
+    }
+
     @Bean
     @Profile("local")
     public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -38,10 +44,12 @@ public class WebSecurityConfig {
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
                         .requestMatchers(PERMIT_ALL).permitAll()
-                        .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
+                        .anyRequest().permitAll()
+                        //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+
+        return addExceptionHandling(http).build();
     }
 
     @Bean
@@ -55,7 +63,7 @@ public class WebSecurityConfig {
                         .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        return addExceptionHandling(http).build();
     }
 
 }
