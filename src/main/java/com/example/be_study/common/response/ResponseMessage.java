@@ -6,4 +6,6 @@ public class ResponseMessage {
 
     public static final String BAD_REQUEST_MESSAGE = "Bad Request";
 
+    public static final String TOKEN_EXPIRED_MESSAGE = "Token Expired Error";
+
 }
