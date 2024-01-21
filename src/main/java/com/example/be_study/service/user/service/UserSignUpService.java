@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class UserSignUpService {
@@ -53,8 +55,16 @@ public class UserSignUpService {
             return new DataResponse<>(UserSignUpResponseCode.NOT_ALLOW_BLANK);
         }
 
-        if (userRepository.findByUserNickName(userNickname).isPresent()) {
-            return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME);
+        List<User> nicknameList = userRepository.findAllByUserNickNameStartsWith(userNickname);
+
+        if (!nicknameList.isEmpty()) {
+            while (true) {
+                String recommendNickname = userNickname + String.format("%02d", (int) (Math.random() * 90) + 10); // 닉네임 추천
+                if (nicknameList.stream().noneMatch(user -> user.getUserNickName().equals(recommendNickname))) {
+                    String errorMessage = "'" + recommendNickname + "' 이 별명은 어떠신가요? 별명은 언제든 수정하실 수 있습니다.";
+                    return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus(), errorMessage);
+                }
+            }
         }
 
         return new DataResponse<>(UserSignUpResponseCode.SUCCESS);

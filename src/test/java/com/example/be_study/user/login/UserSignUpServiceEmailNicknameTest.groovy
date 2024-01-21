@@ -1,7 +1,6 @@
 package com.example.be_study.user.login
 
 import com.example.be_study.common.error.exception.BadRequestApiException
-import com.example.be_study.common.response.ResponseMessage
 import com.example.be_study.service.user.domain.User
 import com.example.be_study.service.user.enums.ProviderType
 import com.example.be_study.service.user.enums.UserSignUpResponseCode
@@ -48,27 +47,14 @@ class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
     def "사용 가능한 별명"() {
         given:
         String userNickname = "홍길동"
-
-        when:
-        1 * userRepository.findByUserNickName(userNickname) >> Optional.empty()
-        userSignUpService.userIsAlreadyExistNickname(userNickname)
-
-        then:
-        notThrown(BadRequestApiException)
-    }
-
-    def "사용 중인 별명"() {
-        given:
-        String userNickname = "홍길동"
-
-        and:
-        1 * userRepository.findByUserNickName(userNickname) >> Optional.of(new User())
+        1 * userRepository.findAllByUserNickNameStartsWith(userNickname) >> []
 
         when:
         def result = userSignUpService.userIsAlreadyExistNickname(userNickname)
 
         then:
-        result.status == UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus()
+        notThrown(BadRequestApiException)
+        result.status == UserSignUpResponseCode.SUCCESS.getResponseStatus()
     }
 
     def "별명에 공백 사용"() {
