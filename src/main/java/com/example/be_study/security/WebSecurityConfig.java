@@ -1,7 +1,5 @@
 package com.example.be_study.security;
 
-import com.example.be_study.service.user.oauth.OauthServerTypeConverter;
-import io.netty.handler.codec.http.HttpMethod;
 import com.example.be_study.common.jwt.JwtAuthenticationFilter;
 import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
@@ -27,12 +25,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
 
     private final static String[] PERMIT_ALL = {
-            "/login",
-            "/oauth2/*", "/api/v1/oauth/*",
-            "/api/auth/*","/oauth/*",
-            "/oauth/login",
-            "/api/v1/oauth/kakao.html", "/oauth2/callback/kakao",
-            "favicon.ico"
+            "/login"
     };
 
     @Override
@@ -59,6 +52,12 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         this.jwtService = jwtService;
     }
 
+    public HttpSecurity addExceptionHandling(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity.exceptionHandling((authenticationManager) -> authenticationManager
+                .authenticationEntryPoint(new WebAuthenticationEntryPoint())
+        );
+    }
+
     @Bean
     @Profile("local")
     public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -68,9 +67,11 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().permitAll()
+                        //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+
+        return addExceptionHandling(http).build();
     }
 
     @Bean
@@ -84,7 +85,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        return addExceptionHandling(http).build();
     }
 
 }
