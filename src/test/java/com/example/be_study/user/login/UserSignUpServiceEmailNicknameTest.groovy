@@ -3,6 +3,7 @@ package com.example.be_study.user.login
 import com.example.be_study.common.error.exception.BadRequestApiException
 import com.example.be_study.common.response.ResponseMessage
 import com.example.be_study.service.user.domain.User
+import com.example.be_study.service.user.enums.ProviderType
 import com.example.be_study.service.user.enums.UserSignUpResponseCode
 
 class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
@@ -24,13 +25,13 @@ class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
         String userEmail = "test@naver.com"
 
         and:
-        1 * userRepository.findByUserEmail(userEmail) >> Optional.of(new User())
+        1 * userRepository.findByUserEmail(userEmail) >> Optional.of(new User(providerType: ProviderType.ORIGIN))
 
         when:
         def result = userSignUpService.userIsAlreadyExistEmail(userEmail)
 
         then:
-        result.status == UserSignUpResponseCode.ALREADY_EXIST_EMAIL.getResponseStatus()
+        result.status == UserSignUpResponseCode.ALREADY_EXIST_ORIGIN_EMAIL.getResponseStatus()
     }
 
     def "이메일에 공백 사용"() {

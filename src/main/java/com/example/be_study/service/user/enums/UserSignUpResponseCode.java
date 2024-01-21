@@ -8,7 +8,13 @@ public enum UserSignUpResponseCode implements DataResponseCode {
 
     SUCCESS(200,"정상 처리 완료"),
 
-    ALREADY_EXIST_EMAIL(200, "이미 가입된 이메일입니다."),
+    ALREADY_EXIST_KAKAO_EMAIL(200, "이미 카카오톡 간편가입으로 가입된 이메일입니다. '카카오톡' 버튼을 눌러 로그인해주세요."),
+
+    ALREADY_EXIST_NAVER_EMAIL(200, "이미 네이버 간편가입으로 가입된 이메일입니다. '네이버' 버튼을 눌러 로그인해주세요."),
+
+    ALREADY_EXIST_FACEBOOK_EMAIL(200, "이미 페이스북 간편가입으로 가입된 이메일입니다. '페이스북' 버튼을 눌러 로그인해주세요."),
+
+    ALREADY_EXIST_ORIGIN_EMAIL(200, "이미 가입한 이메일입니다. '이메일 로그인'으로 로그인해주세요."),
 
     ALREADY_EXIST_NICKNAME(200, "사용 중인 별명입니다."),
 
