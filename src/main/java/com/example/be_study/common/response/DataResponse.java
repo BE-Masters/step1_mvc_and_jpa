@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class DataResponse<T> {
 
-    private int status;
+    private final int status;
 
-    private String message;
+    private final String message;
 
     private T response;
 
@@ -16,6 +16,11 @@ public class DataResponse<T> {
         this.status = dataResponseCode.getResponseStatus();
         this.message = dataResponseCode.getResponseMessage();
         this.response = response;
+    }
+
+    public DataResponse(DataResponseCode dataResponseCode) {
+        this.status = dataResponseCode.getResponseStatus();
+        this.message = dataResponseCode.getResponseMessage();
     }
 
     public DataResponse(int status, String message, T response) {

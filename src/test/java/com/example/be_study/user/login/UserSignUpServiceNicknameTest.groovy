@@ -4,7 +4,7 @@ import com.example.be_study.common.error.exception.BadRequestApiException
 import com.example.be_study.common.response.ResponseMessage
 import com.example.be_study.service.user.domain.User
 
-class UserLoginServiceNicknameTest extends UserLoginServiceTest {
+class UserSignUpServiceNicknameTest extends UserSignUpServiceTest {
 
     def "사용 가능한 이메일"() {
         given:
