@@ -22,7 +22,7 @@ public class WebSecurityConfig {
     private final JwtService jwtService;
 
     private final static String[] PERMIT_ALL = {
-            "/login"
+            "/api/v1/sign-up/**"
     };
 
     public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {

@@ -23,6 +23,10 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = true)
     public DataResponse<DataResponseCode> userIsAlreadyExistEmail(String userEmail) {
+        if (userEmail.contains(" ")) { // 공백 검사
+            return new DataResponse<>(UserSignUpResponseCode.NOT_ALLOW_BLANK);
+        }
+
         if (userRepository.findByUserEmail(userEmail).isPresent()) {
             return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_EMAIL);
         }
@@ -33,7 +37,12 @@ public class UserSignUpService {
     /**
      *  닉네임 중복 확인
      */
+    @Transactional(readOnly = true)
     public DataResponse<DataResponseCode> userIsAlreadyExistNickname(String userNickname) {
+        if (userNickname.contains(" ")) { // 공백 검사
+            return new DataResponse<>(UserSignUpResponseCode.NOT_ALLOW_BLANK);
+        }
+
         if (userRepository.findByUserNickName(userNickname).isPresent()) {
             return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME);
         }

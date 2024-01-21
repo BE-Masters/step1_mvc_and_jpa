@@ -31,7 +31,7 @@ public class UserSignUpController {
      *  닉네임 중복 확인
      */
     @GetMapping(value = "/verify-nickname", name = "닉네임 중복 확인")
-    public DataResponse<DataResponseCode> userIsAlreadyExistNickname(@RequestParam String userNickname) {
+    public DataResponse<DataResponseCode> userIsAlreadyExistNickname(@RequestParam(name = "userNickname") String userNickname) {
         DataResponse<DataResponseCode> response = userSignUpService.userIsAlreadyExistNickname(userNickname);
         return response;
     }
