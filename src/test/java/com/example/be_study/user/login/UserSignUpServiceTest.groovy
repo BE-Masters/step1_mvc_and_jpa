@@ -8,12 +8,12 @@ import spock.lang.Subject
 abstract class UserSignUpServiceTest extends Specification {
 
     @Subject
-    UserSignUpService userLoginService
+    UserSignUpService userSignUpService
 
     UserRepository userRepository = Mock()
 
     def setup() {
-        userLoginService = new UserSignUpService(
+        userSignUpService = new UserSignUpService(
                 userRepository
         )
     }
