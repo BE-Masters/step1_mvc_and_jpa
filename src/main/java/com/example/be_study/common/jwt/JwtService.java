@@ -1,8 +1,8 @@
 package com.example.be_study.common.jwt;
 
 import com.example.be_study.service.user.domain.User;
-import com.example.be_study.service.user.domain.UserRepository;
 import com.example.be_study.service.user.enums.UserType;
+import com.example.be_study.service.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

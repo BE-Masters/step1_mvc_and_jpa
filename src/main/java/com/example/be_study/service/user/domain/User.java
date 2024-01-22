@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -41,11 +44,11 @@ public class User extends AbstractBaseUserDeleteEntity {
     private String providerKey;
 
     @Column(name = "user_last_login_date", nullable = false)
-    private String userLastLoginDate;
+    @UpdateTimestamp
+    private LocalDateTime userLastLoginDate;
 
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
-
 
     @Builder
     public User(String userProfile,
@@ -55,7 +58,7 @@ public class User extends AbstractBaseUserDeleteEntity {
                 String userNickName,
                 ProviderType providerType,
                 String providerKey,
-                String userLastLoginDate,
+                LocalDateTime userLastLoginDate,
                 Boolean dormancy
     ) {
         this.userProfile = userProfile;
@@ -67,6 +70,7 @@ public class User extends AbstractBaseUserDeleteEntity {
         this.providerKey = providerKey;
         this.userLastLoginDate = userLastLoginDate;
         this.dormancy = dormancy;
+        this.setDeleted(false);
     }
 
     public static User ofKakao() {

@@ -1,4 +1,23 @@
 # 기본 공통 설정
+server:
+  port: 8080
+
+spring:
+  application:
+    name: BeStudyApplication
+
+logging:
+  level:
+    root: info
+    org.springframework: info
+    com.example.be_study: debug
+
+jwt:
+  access-token-key: ${ACCESS_TOKEN_KEY}
+  refresh-token-key: ${REFRESH_TOKEN_KEY}
+
+# Local 프로필
+---
 spring:
   profiles:
     active: local
@@ -13,6 +32,28 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/house?useSSL=false&allowPublicKeyRetrieval=true
     username: bestudy
     password: bestudy
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: http://localhost:8080/oauth2/callback/kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_image
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -47,11 +88,34 @@ spring:
   config:
     activate:
       on-profile: prod
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/house?useSSL=false&allowPublicKeyRetrieval=true
     username: bestudy
     password: bestudy
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 60a924edb10f7e39450411a48e2a588d
+            client-secret: yqhN4Wtk2jUsV1wE1xawkJ9IgX6g7JlQ
+            redirect-uri: http://localhost:8080/oauth2/callback/kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_image
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
