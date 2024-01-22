@@ -30,7 +30,7 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = true)
     public DataResponse<DataResponseCode> userIsAlreadyExistEmail(String userEmail) {
-        if (userEmail == null){
+        if (userEmail == null || userEmail.equals("")){
             return new DataResponse<>(UserSignUpResponseCode.REQUIRED_FIELD);
         }
 
@@ -66,7 +66,7 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = true)
     public DataResponse<DataResponseCode> userIsAlreadyExistNickname(String userNickname) {
-        if (userNickname == null){
+        if (userNickname == null || userNickname.equals("")){
             return new DataResponse<>(UserSignUpResponseCode.REQUIRED_FIELD);
         }
 
