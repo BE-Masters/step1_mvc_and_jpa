@@ -22,11 +22,10 @@ public class OauthController {
         this.oauthService = oauthService;
     }
 
-    @SneakyThrows
     @GetMapping("/{oauthServerType}")
     public ResponseEntity<KakaoOauthResponseCode> redirectAuthCodeRequestUrl(
             @PathVariable("oauthServerType") OauthServerType oauthServerType, HttpServletResponse response
-    ) {
+    ) throws IOException {
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
         response.sendRedirect(redirectUrl);
         return ResponseEntity.ok(KakaoOauthResponseCode.OAUTH_AUTHORIZE_SUCCESS);

@@ -3,6 +3,8 @@ package com.example.be_study.security;
 import com.example.be_study.common.jwt.JwtAuthenticationFilter;
 import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
+import com.example.be_study.service.user.oauth.OauthServerTypeConverter;
+import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,7 +27,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
 
     private final static String[] PERMIT_ALL = {
-            "/login"
+            "/login",
+            "/api/v1/oauth/kakao.html",
+            "/oauth2/callback/kakao",
+
     };
 
     @Override
