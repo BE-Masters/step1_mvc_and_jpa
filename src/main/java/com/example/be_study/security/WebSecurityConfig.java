@@ -27,6 +27,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
 
     private final static String[] PERMIT_ALL = {
+            "/api/v1/sign-up/**",
             "/login",
             "/api/v1/oauth/kakao.html",
             "/oauth2/callback/kakao",

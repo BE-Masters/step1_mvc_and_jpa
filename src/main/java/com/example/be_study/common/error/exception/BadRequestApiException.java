@@ -1,15 +1,15 @@
 package com.example.be_study.common.error.exception;
 
-import com.example.be_study.common.response.ResponseMessage;
+import com.example.be_study.service.user.enums.UserResponseMessage;
 import lombok.Getter;
 
 @Getter
 public class BadRequestApiException extends RuntimeException {
 
-    private final ResponseMessage code;
+    private final UserResponseMessage userResponseMessage;
 
-    public BadRequestApiException(ResponseMessage code, String message) {
-        super(message);
-        this.code = code;
+    public BadRequestApiException(UserResponseMessage userResponseMessage) {
+        super(userResponseMessage.getResponseMessage());
+        this.userResponseMessage = userResponseMessage;
     }
 }
