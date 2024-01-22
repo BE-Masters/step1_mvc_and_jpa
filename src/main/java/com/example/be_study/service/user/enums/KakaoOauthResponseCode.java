@@ -1,7 +1,6 @@
 package com.example.be_study.service.user.enums;
 
 import com.example.be_study.common.response.DataResponseCode;
-import com.example.be_study.service.user.dto.KakaoMemberResponse;
 
 public enum KakaoOauthResponseCode implements DataResponseCode {
     LOGIN_SUCCESS(200, "로그인 완료"),

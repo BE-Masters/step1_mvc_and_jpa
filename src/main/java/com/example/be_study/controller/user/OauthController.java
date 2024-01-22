@@ -23,20 +23,20 @@ public class OauthController {
     }
 
     @GetMapping("/{oauthServerType}")
-    public ResponseEntity<KakaoOauthResponseCode> redirectAuthCodeRequestUrl(
+    public DataResponse<String> redirectAuthCodeRequestUrl(
             @PathVariable("oauthServerType") OauthServerType oauthServerType, HttpServletResponse response
     ) throws IOException {
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
         response.sendRedirect(redirectUrl);
-        return ResponseEntity.ok(KakaoOauthResponseCode.OAUTH_AUTHORIZE_SUCCESS);
+        return new DataResponse<>(KakaoOauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, "ok");
     }
 
     @GetMapping("/login/{oauthServerType}/{code}")
-    public ResponseEntity<KakaoOauthResponseCode> login(
+    public DataResponse<String> login(
             @PathVariable("oauthServerType") OauthServerType oauthServerType,
             @PathVariable("code") String code
     ) {
-        return ResponseEntity.ok(KakaoOauthResponseCode.LOGIN_SUCCESS);
+        return new DataResponse<>(KakaoOauthResponseCode.LOGIN_SUCCESS,"ok");
     }
 
 }
