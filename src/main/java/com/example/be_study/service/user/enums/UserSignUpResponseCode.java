@@ -18,7 +18,9 @@ public enum UserSignUpResponseCode implements DataResponseCode {
 
     ALREADY_EXIST_NICKNAME(200, "사용 중인 별명입니다."),
 
-    NOT_ALLOW_BLANK(200, "공백은 사용할 수 없습니다.");
+    INVALID_EMAIL_FORMAT(200, "이메일 형식이 올바르지 않습니다."),
+
+    REQUIRED_FIELD(200, "필수 값입니다.");
 
     private final int responseStatus;
 

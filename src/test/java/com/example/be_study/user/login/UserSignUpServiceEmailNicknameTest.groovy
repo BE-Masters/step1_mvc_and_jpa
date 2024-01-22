@@ -33,15 +33,37 @@ class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
         result.status == UserSignUpResponseCode.ALREADY_EXIST_ORIGIN_EMAIL.getResponseStatus()
     }
 
-    def "이메일에 공백 사용"() {
+    def "이메일 NULL 입력"() {
         given:
-        String userEmail = "te st@naver.com"
+        String userEmail = ""
 
         when:
         def result = userSignUpService.userIsAlreadyExistEmail(userEmail)
 
         then:
-        result.status == UserSignUpResponseCode.NOT_ALLOW_BLANK.getResponseStatus()
+        result.status == UserSignUpResponseCode.REQUIRED_FIELD.getResponseStatus()
+    }
+
+    def "올바르지 않은 이메일 형식 - '@' 없을 경우"() {
+        given:
+        def userEmail = "test.email"
+
+        when:
+        def result = userSignUpService.userIsAlreadyExistEmail(userEmail)
+
+        then:
+        result.status == UserSignUpResponseCode.INVALID_EMAIL_FORMAT.getResponseStatus()
+    }
+
+    def "올바르지 않은 이메일 형식 - '.' 없을 경우"() {
+        given:
+        def userEmail = "test@email"
+
+        when:
+        def result = userSignUpService.userIsAlreadyExistEmail(userEmail)
+
+        then:
+        result.status == UserSignUpResponseCode.INVALID_EMAIL_FORMAT.getResponseStatus()
     }
 
     def "사용 가능한 별명"() {
@@ -57,14 +79,15 @@ class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
         result.status == UserSignUpResponseCode.SUCCESS.getResponseStatus()
     }
 
-    def "별명에 공백 사용"() {
+    def "별명 NULL 입력"() {
         given:
-        String userNickname = "홍 길동"
+        String userNickname = ""
+        1 * userRepository.findAllByUserNickNameStartsWith(userNickname) >> []
 
         when:
         def result = userSignUpService.userIsAlreadyExistNickname(userNickname)
 
         then:
-        result.status == UserSignUpResponseCode.NOT_ALLOW_BLANK.getResponseStatus()
+        result.status == UserSignUpResponseCode.REQUIRED_FIELD.getResponseStatus()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.be_study.service.user;
+package com.example.be_study.service.user.controller;
 
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.common.response.DataResponseCode;
