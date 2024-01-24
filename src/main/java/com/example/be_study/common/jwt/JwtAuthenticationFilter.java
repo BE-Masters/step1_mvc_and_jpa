@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (jwtService.isUnauthorized(token, TokenType.AccessToken)) { // 권한이 없는 경우
-            new DataResponse<>(JwtResponseMessage.TOKEN_EXPIRED_MESSAGE);
+            new DataResponse<>(JwtResponseMessage.TOKEN_PERMISSION_ERROR_MESSAGE);
         }
     }
 }
