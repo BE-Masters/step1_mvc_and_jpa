@@ -1,7 +1,11 @@
 # 기본 설치 프로그램
 1. Docker를 설치합니다.
 
-# DB
+# DB (실행문 - 신규)
+1. make start (docker를 실행합니다.)
+2. make sto (docker를 종료합니다.)
+
+# DB (legacy 실행문 - 아직 사용가능)
 1. terminal에서 /infra 폴더로 이동합니다.
 2. ```docker-compoe up -d``` 를 실행합니다.
 
