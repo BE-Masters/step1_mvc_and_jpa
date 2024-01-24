@@ -72,8 +72,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
                         .requestMatchers(PERMIT_ALL).permitAll()
-                        .anyRequest().permitAll()
-                        //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
+                        .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
 
