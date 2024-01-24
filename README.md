@@ -7,7 +7,7 @@
 
 # DB (legacy 실행문 - 아직 사용가능)
 1. terminal에서 /infra 폴더로 이동합니다.
-2. ```docker-compoe up -d``` 를 실행합니다.
+2. ```docker-compose up -d``` 를 실행합니다.
 
 # Flyway
 DB 테이블 형상을 관리하는 툴입니다.
