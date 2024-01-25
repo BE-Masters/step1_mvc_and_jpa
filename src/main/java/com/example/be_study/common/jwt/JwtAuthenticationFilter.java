@@ -1,12 +1,14 @@
 package com.example.be_study.common.jwt;
 
-import com.example.be_study.common.error.exception.TokenExpiredException;
+import com.example.be_study.common.response.DataResponse;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -28,10 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtTokenUtil.resolveToken(request); // Header 에서 토큰 값 가져오기
 
         debugLogging(request);
-//        tokenValidation(token);
-//
-//        Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        if (StringUtils.isNotBlank(token)) {
+            tokenValidation(token);
+
+            Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         filterChain.doFilter(request, response);
     }
@@ -41,17 +46,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void tokenValidation(String token) {
-        if (!StringUtils.isNotBlank(token)) { // 토큰이 없는 경우
-            throw new TokenExpiredException();
-        }
-
         if (jwtTokenUtil.isExpired(token, TokenType.AccessToken)) { // 만료된 토큰인 경우
-            throw new TokenExpiredException();
+            new DataResponse<>(JwtResponseMessage.TOKEN_EXPIRED_MESSAGE);
         }
 
         if (jwtService.isUnauthorized(token, TokenType.AccessToken)) { // 권한이 없는 경우
-            throw new TokenExpiredException();
+            new DataResponse<>(JwtResponseMessage.TOKEN_PERMISSION_ERROR_MESSAGE);
         }
     }
-
 }
