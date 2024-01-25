@@ -1,6 +1,11 @@
 # 기본 설치 프로그램
 1. Docker를 설치합니다.
 
+# 사용하는 포트 numbers
+1. 3306 : mysql
+2. 4566 : localstack
+3. 8080 : tomcat
+
 # DB (실행문 - 신규)
 1. make start (docker를 실행합니다.)
 2. make sto (docker를 종료합니다.)
