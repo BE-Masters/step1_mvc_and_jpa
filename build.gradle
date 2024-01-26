@@ -58,6 +58,11 @@ dependencies {
     // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    //AWS S3
+    implementation 'software.amazon.awssdk:s3:2.16.79' // AWS SDK for Java
+    implementation 'software.amazon.awssdk:s3-filesystem-provider:2.16.79' // AWS S3 File System Provider
+    implementation 'cloud.localstack:localstack-utils:0.12.0' // LocalStack utility
+    testImplementation 'cloud.localstack:localstack-test-server:0.12.0' // LocalStack test server
 
     // flyway
     implementation 'org.flywaydb:flyway-mysql'
