@@ -9,7 +9,6 @@
 # Docker Compose
 1. localstack CLI 설치 -> brew install localstack/tap/localstack-cli
 
-
 # DB (실행문 - 신규)
 1. make start (docker를 실행합니다.)
 2. make sto (docker를 종료합니다.)
