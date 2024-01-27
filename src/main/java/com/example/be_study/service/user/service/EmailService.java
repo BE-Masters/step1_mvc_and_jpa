@@ -22,49 +22,61 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
-//    private final RedisUtil redisUtil;
+    private final RedisService redisService;
 
     private static final String emailCode = createKey();
 
-    public EmailService(JavaMailSender javaMailSender) {
+    public EmailService(JavaMailSender javaMailSender, RedisService redisService) {
         this.javaMailSender = javaMailSender;
+        this.redisService = redisService;
     }
 
+    /**
+     *  메일 전송
+     */
     @Transactional(readOnly = true)
-    public DataResponse<DataResponseCode> sendMail(String receiver) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage message = createMessage(receiver);
-
-//        if (redisUtil.existData(receiver)) {
-//            redisUtil.deleteData(receiver);
-//        }
-
+    public DataResponse<DataResponseCode> sendMail(String receiver) {
         try {
+            MimeMessage message = createMessage(receiver);
+
+            if (redisService.existData(receiver)) { // 기존에 발급 받았던 인증 코드 삭제
+                redisService.deleteData(receiver);
+            }
+
             javaMailSender.send(message);
-        } catch (MailException e) {
+
+            redisService.setDataExpire(receiver, emailCode, 3 * 60 * 1000L); // 만료 시간 3분
+
+            return new DataResponse<>(UserSignUpResponseCode.SUCCESS);
+        } catch (MessagingException | UnsupportedEncodingException | MailException e) {
             e.printStackTrace();
             return new DataResponse<>(UserSignUpResponseCode.MAIL_SEND_FAILED);
         }
-
-//        redisUtil.setDataExpire(receiver, emailCode, 60 * 5L);
-
-        return new DataResponse<>(UserSignUpResponseCode.SUCCESS);
     }
 
-//    @Transactional(readOnly = true)
-//    public boolean verifyEmailCode(String email, String code) {
-//        String codeFoundByEmail = redisUtil.getData(email);
-//
-//        if (codeFoundByEmail == null) {
-//            return false;
-//        }
-//
-//        return redisUtil.getData(email).equals(code);
-//    }
+    /**
+     *  메일 인증 코드 확인
+     */
+    @Transactional(readOnly = true)
+    public DataResponse<DataResponseCode> verifyEmailCode(String email, String code) {
+        String userMailCode = redisService.getData(email);
+
+        if (userMailCode != null) {
+            if (userMailCode.equals(code)) { // 올바른 인증 코드인 경우
+                return new DataResponse<>(UserSignUpResponseCode.SUCCESS);
+            }
+            else { // 올바르지 않은 인증 코드인 경우
+                return new DataResponse<>(UserSignUpResponseCode.INVALID_AUTH_MAIL_CODE);
+            }
+        } else { // 만료된 인증 코드인 경우
+            return new DataResponse<>(UserSignUpResponseCode.EXPIRED_AUTH_MAIL_CODE);
+        }
+    }
 
     /**
      *  메일 내용 작성
      */
-    private MimeMessage createMessage(String receiver) throws MessagingException, UnsupportedEncodingException {
+    public MimeMessage createMessage(String receiver) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, receiver);

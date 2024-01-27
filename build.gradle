@@ -81,6 +81,9 @@ dependencies {
 
     // 이메일 전송을 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 flyway {

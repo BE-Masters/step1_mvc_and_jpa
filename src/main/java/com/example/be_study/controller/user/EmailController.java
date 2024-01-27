@@ -19,18 +19,15 @@ public class EmailController {
     }
 
     @GetMapping(name = "이메일 전송")
-    public DataResponse<DataResponseCode> sendMail(@RequestParam("receiver") String receiver) throws MessagingException, UnsupportedEncodingException {
+    public DataResponse<DataResponseCode> sendMail(@RequestParam("receiver") String receiver) {
         DataResponse<DataResponseCode> response = emailService.sendMail(receiver);
         return response;
     }
 
-//    @GetMapping(value = "/auth", name = "이메일 인증 코드 확인")
-//    public ResponseEntity checkMailCode(@RequestParam("receiver") String receiver, @RequestParam("code") String code) throws Exception {
-//        boolean authCode = emailService.verifyEmailCode(receiver, code);
-//        if (!authCode) {
-//            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
+    @GetMapping(value = "/auth", name = "이메일 인증 코드 확인")
+    public DataResponse<DataResponseCode> checkMailCode(@RequestParam("receiver") String receiver, @RequestParam("code") String code) {
+        DataResponse<DataResponseCode> response = emailService.verifyEmailCode(receiver, code);
+        return response;
+    }
 
 }

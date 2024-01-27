@@ -22,7 +22,11 @@ public enum UserSignUpResponseCode implements DataResponseCode {
 
     REQUIRED_FIELD(200, "필수 값입니다."),
 
-    MAIL_SEND_FAILED(200, "메일 전송에 실패했습니다.");
+    MAIL_SEND_FAILED(200, "메일 전송에 실패했습니다."),
+
+    INVALID_AUTH_MAIL_CODE(200, "인증 코드가 올바르지 않습니다."),
+
+    EXPIRED_AUTH_MAIL_CODE(200, "인증 코드가 만료되었습니다.");
 
     private final int responseStatus;
 
