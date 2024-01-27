@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.1'
     id 'io.spring.dependency-management' version '1.1.4'
     id "org.flywaydb.flyway" version "7.2.0"
+
 }
 
 
@@ -59,10 +60,8 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     //AWS S3
-    implementation 'software.amazon.awssdk:s3:2.16.79' // AWS SDK for Java
-    implementation 'software.amazon.awssdk:s3-filesystem-provider:2.16.79' // AWS S3 File System Provider
-    implementation 'cloud.localstack:localstack-utils:0.12.0' // LocalStack utility
-    testImplementation 'cloud.localstack:localstack-test-server:0.12.0' // LocalStack test server
+    implementation 'software.amazon.awssdk:s3:2.17.64' // AWS SDK for Java (latest version)
+
 
     // flyway
     implementation 'org.flywaydb:flyway-mysql'
@@ -86,6 +85,8 @@ flyway {
     user = 'bestudy'
     password = 'bestudy'
 }
+
+flywayMigrate.dependsOn('dependencies')
 
 tasks.named('test') {
     useJUnitPlatform()

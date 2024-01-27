@@ -12,7 +12,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -44,14 +43,10 @@ public class S3ImageUploadService {
                     .credentialsProvider(() -> AwsBasicCredentials.create(accessKey, secretKey))
                     .build();
 
-            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                    .bucket(houseS3Bucket.getBucketName())
-                    .build();
-
             RequestBody requestBody = RequestBody
                     .fromInputStream(multipartFile.getInputStream(), multipartFile.getSize());
 
-            PutObjectResponse response = s3Client.putObject(
+            s3Client.putObject(
                     PutObjectRequest.builder()
                             .contentType(multipartFile.getContentType())
                             .bucket(houseS3Bucket.getBucketName())
@@ -61,7 +56,7 @@ public class S3ImageUploadService {
             );
 
 
-            return response.eTag();
+            return houseS3Bucket.getS3Path(multipartFile.getOriginalFilename());
         } catch (IOException e) {
             throw new S3ImageUploadException(
                     HttpStatusCode.valueOf(400),
