@@ -20,7 +20,9 @@ public enum UserSignUpResponseCode implements DataResponseCode {
 
     INVALID_EMAIL_FORMAT(200, "이메일 형식이 올바르지 않습니다."),
 
-    REQUIRED_FIELD(200, "필수 값입니다.");
+    REQUIRED_FIELD(200, "필수 값입니다."),
+
+    MAIL_SEND_FAILED(200, "메일 전송에 실패했습니다.");
 
     private final int responseStatus;
 
