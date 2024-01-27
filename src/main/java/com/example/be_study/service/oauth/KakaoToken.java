@@ -1,4 +1,4 @@
-package com.example.be_study.service.user.oauth;
+package com.example.be_study.service.oauth;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

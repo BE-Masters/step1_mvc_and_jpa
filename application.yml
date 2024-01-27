@@ -79,6 +79,13 @@ jwt:
   access-token-key: ${ACCESS_TOKEN_KEY}
   refresh-token-key: ${REFRESH_TOKEN_KEY}
 
+aws:
+  accessKey: test
+  secretKey: test
+  region: ap-northeast-2
+  s3:
+    baseUrl: http://localhost:4566
+
 server:
   port: 8080
 

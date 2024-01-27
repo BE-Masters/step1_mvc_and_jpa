@@ -3,7 +3,7 @@ package com.example.be_study.security;
 import com.example.be_study.common.jwt.JwtAuthenticationFilter;
 import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
-import com.example.be_study.service.user.oauth.OauthServerTypeConverter;
+import com.example.be_study.service.oauth.OauthServerTypeConverter;
 import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +31,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "/login",
             "/api/v1/oauth/kakao.html",
             "/oauth2/callback/kakao",
-
     };
+
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -48,6 +48,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .exposedHeaders("*");
     }
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new OauthServerTypeConverter());
@@ -72,7 +73,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
                         .requestMatchers(PERMIT_ALL).permitAll()
-                        .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
+                        //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
 
