@@ -6,9 +6,7 @@ CREATE TABLE policy_history (
   required BOOL NOT NULL default false COMMENT '필수 약관 여부',
   is_latest_revision BOOL NOT NULL default false COMMENT '최종 개정판 여부',
   created_at DATETIME NOT NULL COMMENT '생성일',
-  modified_at DATETIME NOT NULL COMMENT '수정일',
-  created_by BIGINT unsigned NOT NULL COMMENT '생성한 유저',
-  modified_by BIGINT unsigned NOT NULL COMMENT '수정한 유저'
+  modified_at DATETIME NOT NULL COMMENT '수정일'
 );
 
 INSERT INTO policy_history (
@@ -18,9 +16,7 @@ INSERT INTO policy_history (
   required,
   is_latest_revision,
   created_at,
-  modified_at,
-  created_by,
-  modified_by
+  modified_at
 ) VALUES (
   'REQUIRED_IS_OVER_FOURTEEN',
   '2024-01-10 22:00:00',
@@ -28,9 +24,7 @@ INSERT INTO policy_history (
   true,
   true,
   '2024-01-10 22:00:00',
-  '2024-01-10 22:00:00',
-  1,
-  1
+  '2024-01-10 22:00:00'
 );
 
 INSERT INTO policy_history (
@@ -40,9 +34,7 @@ INSERT INTO policy_history (
   required,
   is_latest_revision,
   created_at,
-  modified_at,
-  created_by,
-  modified_by
+  modified_at
 ) VALUES (
   'REQUIRED_TERMS_OF_SERVICE',
   '2024-01-10 22:00:00',
@@ -50,9 +42,7 @@ INSERT INTO policy_history (
   true,
   true,
   '2024-01-10 22:00:00',
-  '2024-01-10 22:00:00',
-  1,
-  1
+  '2024-01-10 22:00:00'
 );
 
 INSERT INTO policy_history (
@@ -62,9 +52,7 @@ INSERT INTO policy_history (
   required,
   is_latest_revision,
   created_at,
-  modified_at,
-  created_by,
-  modified_by
+  modified_at
 ) VALUES (
   'REQUIRED_PERSONAL_INFO_PROCESS',
   '2024-01-10 22:00:00',
@@ -72,9 +60,7 @@ INSERT INTO policy_history (
   true,
   true,
   '2024-01-10 22:00:00',
-  '2024-01-10 22:00:00',
-  1,
-  1
+  '2024-01-10 22:00:00'
 );
 
 INSERT INTO policy_history (
@@ -84,9 +70,7 @@ INSERT INTO policy_history (
   required,
   is_latest_revision,
   created_at,
-  modified_at,
-  created_by,
-  modified_by
+  modified_at
 ) VALUES (
   'OPTION_PERSONAL_INFO_MARKETING',
   '2024-01-10 22:00:00',
@@ -94,9 +78,7 @@ INSERT INTO policy_history (
   false,
   true,
   '2024-01-10 22:00:00',
-  '2024-01-10 22:00:00',
-  1,
-  1
+  '2024-01-10 22:00:00'
 );
 
 INSERT INTO policy_history (
@@ -106,9 +88,7 @@ INSERT INTO policy_history (
   required,
   is_latest_revision,
   created_at,
-  modified_at,
-  created_by,
-  modified_by
+  modified_at
 ) VALUES (
   'OPTION_EVENT_MAIL_OR_SMS',
   '2024-01-10 22:00:00',
@@ -116,9 +96,7 @@ INSERT INTO policy_history (
   true,
   true,
   '2024-01-10 22:00:00',
-  '2024-01-10 22:00:00',
-  1,
-  1
+  '2024-01-10 22:00:00'
 );
 
 CREATE TABLE policy_agree (

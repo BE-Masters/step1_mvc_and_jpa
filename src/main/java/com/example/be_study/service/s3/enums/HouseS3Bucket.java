@@ -5,10 +5,9 @@ import lombok.Getter;
 @Getter
 public enum HouseS3Bucket {
 
-    PolicyPdfBucket("policy-pdf-bucket", "/policy-pdf/");
+    PolicyPdfBucket("policy-pdf-bucket", "policy-pdf/");
 
     private String bucketName;
-    @Getter
     private String s3Path;
 
     HouseS3Bucket(String bucketName, String s3Path) {

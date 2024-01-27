@@ -2,6 +2,7 @@ package com.example.be_study.service.s3.service;
 
 import com.example.be_study.service.s3.enums.HouseS3Bucket;
 import com.example.be_study.service.s3.exception.S3ImageUploadException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -10,13 +11,14 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.IOException;
 import java.net.URI;
 
 
+@Slf4j
 @Service
 public class S3ImageUploadService {
 
@@ -36,7 +38,6 @@ public class S3ImageUploadService {
             MultipartFile multipartFile,
             HouseS3Bucket houseS3Bucket) {
         try {
-
             S3Client s3Client = S3Client.builder()
                     .region(Region.AP_NORTHEAST_2)
                     .endpointOverride(URI.create(baseUrl))
@@ -46,7 +47,7 @@ public class S3ImageUploadService {
             RequestBody requestBody = RequestBody
                     .fromInputStream(multipartFile.getInputStream(), multipartFile.getSize());
 
-            s3Client.putObject(
+            PutObjectResponse response = s3Client.putObject(
                     PutObjectRequest.builder()
                             .contentType(multipartFile.getContentType())
                             .bucket(houseS3Bucket.getBucketName())
@@ -55,6 +56,9 @@ public class S3ImageUploadService {
                     requestBody
             );
 
+            if (!response.sdkHttpResponse().isSuccessful()) {
+                log.error("Error response: " + response.sdkHttpResponse());
+            }
 
             return houseS3Bucket.getS3Path(multipartFile.getOriginalFilename());
         } catch (IOException e) {
