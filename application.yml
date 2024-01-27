@@ -16,6 +16,19 @@ jwt:
   access-token-key: ${ACCESS_TOKEN_KEY}
   refresh-token-key: ${REFRESH_TOKEN_KEY}
 
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: ${GOOGLE_SMTP_ID}
+  password: ${GOOGLE_SMTP_PASSWORD}
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+          required: true
+
 # Local 프로필
 ---
 spring:

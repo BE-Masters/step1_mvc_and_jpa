@@ -78,6 +78,9 @@ dependencies {
     // slf4j & logback
     implementation('org.slf4j:jcl-over-slf4j')
     implementation('ch.qos.logback:logback-classic')
+
+    // 이메일 전송을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 flyway {
