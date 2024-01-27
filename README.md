@@ -17,9 +17,9 @@
 
 # localStack 설치
 1. localstack CLI 설치 -> brew install localstack/tap/localstack-cli
-2terminal을 열고 아래 CLI를 실행합니다.
+2. terminal을 열고 아래 CLI를 실행합니다.
    > aws configure --profile localstack
-2. 아래와 같이 메세지가 표시되는데 (AWS Access Key Id 와 AWS Secret Access Key) 2가지만 test라고 입력하고 패스합니다.
+3. 아래와 같이 메세지가 표시되는데 (AWS Access Key Id 와 AWS Secret Access Key) 2가지만 test라고 입력하고 패스합니다.
    (터미널 표시 예시)
 
    AWS Access Key ID [None]: test
