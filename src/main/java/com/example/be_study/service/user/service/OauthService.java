@@ -2,8 +2,8 @@ package com.example.be_study.service.user.service;
 
 import com.example.be_study.service.user.domain.User;
 import com.example.be_study.service.user.enums.OauthServerType;
-import com.example.be_study.service.user.oauth.AuthCodeRequestUrlProviderComposite;
-import com.example.be_study.service.user.oauth.OauthMemberClientComposite;
+import com.example.be_study.service.oauth.AuthCodeRequestUrlProviderComposite;
+import com.example.be_study.service.oauth.OauthMemberClientComposite;
 import org.springframework.stereotype.Service;
 
 @Service

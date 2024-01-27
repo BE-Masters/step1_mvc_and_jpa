@@ -1,6 +1,6 @@
 package com.example.be_study.common.error;
 
-import com.example.be_study.common.error.exception.BadRequestApiException;
+import com.example.be_study.service.user.exception.UserBadRequestApiException;
 import com.example.be_study.common.response.DataResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +19,9 @@ public class GlobalExceptionHandler {
      * 올바르지 않은 요청
      * HttpStatus 400
      */
-    @ExceptionHandler(BadRequestApiException.class)
+    @ExceptionHandler(UserBadRequestApiException.class)
     @ResponseStatus(HttpStatus.OK)
-    public DataResponse<String> badRequestApiException(BadRequestApiException e) {
+    public DataResponse<String> badRequestApiException(UserBadRequestApiException e) {
         log.error("Error : ", e);
         return DataResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }

@@ -1,4 +1,4 @@
-package com.example.be_study.service.user.oauth;
+package com.example.be_study.service.oauth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

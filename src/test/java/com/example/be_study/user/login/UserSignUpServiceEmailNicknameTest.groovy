@@ -1,6 +1,6 @@
 package com.example.be_study.user.login
 
-import com.example.be_study.common.error.exception.BadRequestApiException
+import com.example.be_study.service.user.exception.UserBadRequestApiException
 import com.example.be_study.service.user.domain.User
 import com.example.be_study.service.user.enums.ProviderType
 import com.example.be_study.service.user.enums.UserSignUpResponseCode
@@ -16,7 +16,7 @@ class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
         userSignUpService.userIsAlreadyExistEmail(userEmail)
 
         then:
-        notThrown(BadRequestApiException)
+        notThrown(UserBadRequestApiException)
     }
 
     def "이미 가입된 이메일"() {
@@ -75,7 +75,7 @@ class UserSignUpServiceEmailNicknameTest extends UserSignUpServiceTest {
         def result = userSignUpService.userIsAlreadyExistNickname(userNickname)
 
         then:
-        notThrown(BadRequestApiException)
+        notThrown(UserBadRequestApiException)
         result.status == UserSignUpResponseCode.SUCCESS.getResponseStatus()
     }
 

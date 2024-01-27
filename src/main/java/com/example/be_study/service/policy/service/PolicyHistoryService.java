@@ -6,28 +6,32 @@ import com.example.be_study.service.policy.domain.PolicyHistoryRepository;
 import com.example.be_study.service.policy.dto.PolicyReviseRequestDto;
 import com.example.be_study.service.policy.enums.PolicyHistoryResponseCode;
 import com.example.be_study.service.policy.enums.PolicyType;
+import com.example.be_study.service.s3.enums.HouseS3Bucket;
+import com.example.be_study.service.s3.service.S3ImageUploadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
 @Service
 public class PolicyHistoryService {
     private final PolicyHistoryRepository policyHistoryRepository;
+    private final S3ImageUploadService s3ImageUploadService;
 
-    public PolicyHistoryService(PolicyHistoryRepository policyHistoryRepository) {
+    public PolicyHistoryService(PolicyHistoryRepository policyHistoryRepository, S3ImageUploadService s3ImageUploadService) {
         this.policyHistoryRepository = policyHistoryRepository;
+        this.s3ImageUploadService = s3ImageUploadService;
     }
-
 
     @Transactional(readOnly = false)
     public DataResponse<PolicyHistory> revisePolicyHistory(
             @ModelAttribute PolicyReviseRequestDto policyReviseRequestDto
     ) {
-        //AWS S3 구현
-        String pdfFilePath = "";
+        String pdfFilePath = s3ImageUploadService.uploadImage(
+                policyReviseRequestDto.getPdfFile(),
+                HouseS3Bucket.PolicyPdfBucket
+        );
 
         //새롭게 등록할 개체를 생성
         PolicyHistory policyHistory = policyReviseRequestDto.ofRevisePolicyHistory(pdfFilePath);

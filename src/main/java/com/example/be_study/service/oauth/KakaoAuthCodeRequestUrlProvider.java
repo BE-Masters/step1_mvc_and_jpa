@@ -1,4 +1,4 @@
-package com.example.be_study.service.user.oauth;
+package com.example.be_study.service.oauth;
 
 import com.example.be_study.service.user.enums.OauthServerType;
 import lombok.RequiredArgsConstructor;
