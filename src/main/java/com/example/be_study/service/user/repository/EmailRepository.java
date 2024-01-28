@@ -1,6 +1,6 @@
 package com.example.be_study.service.user.repository;
 
-public interface RedisRepository {
+public interface EmailRepository {
 
     String getData(String key);
 

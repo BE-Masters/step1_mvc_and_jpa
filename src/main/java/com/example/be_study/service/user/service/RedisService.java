@@ -1,16 +1,16 @@
 package com.example.be_study.service.user.service;
 
-import com.example.be_study.service.user.repository.RedisRepositoryImpl;
+import com.example.be_study.service.user.repository.EmailRepositoryImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RedisService {
 
-    private final RedisRepositoryImpl redisRepositoryImpl;
+    private final EmailRepositoryImpl redisRepositoryImpl;
 
 
-    public RedisService(RedisRepositoryImpl redisRepositoryImpl) {
+    public RedisService(EmailRepositoryImpl redisRepositoryImpl) {
         this.redisRepositoryImpl = redisRepositoryImpl;
     }
 
@@ -24,12 +24,12 @@ public class RedisService {
         return redisRepositoryImpl.existData(key);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void setDataExpire(String key, String value, long timeout) {
         redisRepositoryImpl.setDataExpire(key, value, timeout);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void deleteData(String key) {
         redisRepositoryImpl.deleteData(key);
     }

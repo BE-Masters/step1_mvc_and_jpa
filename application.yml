@@ -29,10 +29,6 @@ mail:
           enable: true
           required: true
 
-redis:
-  host: localhost
-  port: 6379
-
 # Local 프로필
 ---
 spring:
@@ -105,6 +101,10 @@ aws:
 
 server:
   port: 8080
+
+redis:
+  host: localhost
+  port: 6379
 
 # prod 프로필
 ---

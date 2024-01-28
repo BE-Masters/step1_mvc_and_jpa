@@ -1,7 +1,6 @@
 package com.example.be_study.service.user.service;
 
 import com.example.be_study.common.response.DataResponse;
-import com.example.be_study.common.response.DataResponseCode;
 import com.example.be_study.service.user.enums.UserSignUpResponseCode;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -24,7 +23,7 @@ public class EmailService {
 
     private final RedisService redisService;
 
-    private static final String emailCode = createKey();
+    private static String emailCode;
 
     public EmailService(JavaMailSender javaMailSender, RedisService redisService) {
         this.javaMailSender = javaMailSender;
@@ -34,9 +33,10 @@ public class EmailService {
     /**
      *  메일 전송
      */
-    @Transactional(readOnly = true)
-    public DataResponse<DataResponseCode> sendMail(String receiver) {
+    @Transactional(readOnly = false)
+    public DataResponse<UserSignUpResponseCode> sendMail(String receiver) {
         try {
+            emailCode = createKey();
             MimeMessage message = createMessage(receiver);
 
             if (redisService.existData(receiver)) { // 기존에 발급 받았던 인증 코드 삭제
@@ -58,18 +58,19 @@ public class EmailService {
      *  메일 인증 코드 확인
      */
     @Transactional(readOnly = true)
-    public DataResponse<DataResponseCode> verifyEmailCode(String email, String code) {
+    public DataResponse<UserSignUpResponseCode> verifyEmailCode(String email, String code) {
         String userMailCode = redisService.getData(email);
 
-        if (userMailCode != null) {
-            if (userMailCode.equals(code)) { // 올바른 인증 코드인 경우
-                return new DataResponse<>(UserSignUpResponseCode.SUCCESS);
-            }
-            else { // 올바르지 않은 인증 코드인 경우
-                return new DataResponse<>(UserSignUpResponseCode.INVALID_AUTH_MAIL_CODE);
-            }
-        } else { // 만료된 인증 코드인 경우
+        if (userMailCode == null) {
             return new DataResponse<>(UserSignUpResponseCode.EXPIRED_AUTH_MAIL_CODE);
+        }
+
+        if (userMailCode.equals(code)) { // 올바른 인증 코드인 경우
+            return new DataResponse<>(UserSignUpResponseCode.SUCCESS);
+        }
+
+        else { // 올바르지 않은 인증 코드인 경우
+            return new DataResponse<>(UserSignUpResponseCode.INVALID_AUTH_MAIL_CODE);
         }
     }
 
@@ -82,13 +83,13 @@ public class EmailService {
         message.addRecipients(Message.RecipientType.TO, receiver);
         message.setSubject("[오늘의집] 인증코드 안내");
 
-        String mailMsg = "";
-        mailMsg += "<div>";
-        mailMsg += "인증코드를 확인해주세요.<br><strong style=\"font-size: 30px;\">";
-        mailMsg += emailCode;
-        mailMsg += "</strong><br>이메일 인증 절차에 따라 이메일 인증코드를 발급해드립니다.<br>인증코드는 이메일 발송 시점으로부터 3분동안 유효합니다.</div>";
+        StringBuilder mailMsg2 = new StringBuilder();
+        mailMsg2.append("<div>");
+        mailMsg2.append("인증코드를 확인해주세요.<br><strong style=\"font-size: 30px;\">");
+        mailMsg2.append(emailCode);
+        mailMsg2.append("</strong><br>이메일 인증 절차에 따라 이메일 인증코드를 발급해드립니다.<br>인증코드는 이메일 발송 시점으로부터 3분동안 유효합니다.</div>");
 
-        message.setText(mailMsg, "utf-8", "html");
+        message.setText(mailMsg2.toString(), "utf-8", "html");
         message.setFrom(new InternetAddress("todayHome", "MEOW~ Developer"));
 
         return message;

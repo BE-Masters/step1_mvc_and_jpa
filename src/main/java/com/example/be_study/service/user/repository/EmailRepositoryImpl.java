@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.time.Duration;
 
 @Repository
-public class RedisRepositoryImpl implements RedisRepository {
+public class EmailRepositoryImpl implements EmailRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public RedisRepositoryImpl(RedisTemplate<String, String> redisTemplate) {
+    public EmailRepositoryImpl(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
