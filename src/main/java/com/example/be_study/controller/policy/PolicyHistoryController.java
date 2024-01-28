@@ -5,6 +5,7 @@ import com.example.be_study.service.policy.domain.PolicyHistory;
 import com.example.be_study.service.policy.dto.PolicyReviseRequestDto;
 import com.example.be_study.service.policy.service.PolicyHistoryService;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,5 +23,12 @@ public class PolicyHistoryController {
             @ModelAttribute PolicyReviseRequestDto policyReviseRequestDto
     ) {
         return policyHistoryService.revisePolicyHistory(policyReviseRequestDto);
+    }
+
+    @GetMapping(value = "/pdf-file/{policyHistoryId}")
+    public ResponseEntity<byte[]> getPolicyHistoryPdfFile(
+            @PathVariable("policyHistoryId") Long policyHistoryId
+    ) {
+        return ResponseEntity.ok(policyHistoryService.downloadPolicyPdfFile(1L, policyHistoryId));
     }
 }

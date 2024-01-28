@@ -6,8 +6,10 @@ import com.example.be_study.service.policy.domain.PolicyHistoryRepository;
 import com.example.be_study.service.policy.dto.PolicyReviseRequestDto;
 import com.example.be_study.service.policy.enums.PolicyHistoryResponseCode;
 import com.example.be_study.service.policy.enums.PolicyType;
+import com.example.be_study.service.policy.exception.PolicyHistoryException;
 import com.example.be_study.service.s3.enums.HouseS3Bucket;
-import com.example.be_study.service.s3.service.S3ImageUploadService;
+import com.example.be_study.service.s3.service.S3Service;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,18 +19,18 @@ import java.util.Optional;
 @Service
 public class PolicyHistoryService {
     private final PolicyHistoryRepository policyHistoryRepository;
-    private final S3ImageUploadService s3ImageUploadService;
+    private final S3Service s3Service;
 
-    public PolicyHistoryService(PolicyHistoryRepository policyHistoryRepository, S3ImageUploadService s3ImageUploadService) {
+    public PolicyHistoryService(PolicyHistoryRepository policyHistoryRepository, S3Service s3Service) {
         this.policyHistoryRepository = policyHistoryRepository;
-        this.s3ImageUploadService = s3ImageUploadService;
+        this.s3Service = s3Service;
     }
 
     @Transactional(readOnly = false)
     public DataResponse<PolicyHistory> revisePolicyHistory(
             @ModelAttribute PolicyReviseRequestDto policyReviseRequestDto
     ) {
-        String pdfFilePath = s3ImageUploadService.uploadImage(
+        String pdfFilePath = s3Service.uploadFile(
                 policyReviseRequestDto.getPdfFile(),
                 HouseS3Bucket.PolicyPdfBucket
         );
@@ -47,5 +49,22 @@ public class PolicyHistoryService {
 
         opPrevHistory.get().setLatestRevision(false);
         return new DataResponse<>(PolicyHistoryResponseCode.SUCCESS, policyHistoryRepository.save(policyHistory));
+    }
+
+    @Transactional(readOnly = true)
+    public byte[] downloadPolicyPdfFile(
+            Long userId,
+            Long policyHistoryId
+    ) {
+        Optional<PolicyHistory> policyHistoryOp = policyHistoryRepository.findById(policyHistoryId);
+        PolicyHistory policyHistory = policyHistoryOp.orElseThrow(() ->
+                new PolicyHistoryException(
+                        HttpStatusCode.valueOf(400),
+                        "존재하지 않는 이용약관 ID입니다. 요청한 userId : " + userId
+                )
+        );
+
+        byte[] pdfFile = s3Service.downloadFile(HouseS3Bucket.PolicyPdfBucket, policyHistory.getPdfFilePath());
+        return pdfFile;
     }
 }
