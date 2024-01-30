@@ -1,6 +1,6 @@
 package com.example.be_study.user.login
 
-import com.example.be_study.service.user.domain.UserRepository
+import com.example.be_study.service.user.repository.UserRepository
 import com.example.be_study.service.user.service.UserSignUpService
 import spock.lang.Specification
 import spock.lang.Subject

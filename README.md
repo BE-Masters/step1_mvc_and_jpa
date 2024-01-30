@@ -6,6 +6,7 @@
 1. 3306 : mysql
 2. 4566 : localstack
 3. 8080 : tomcat
+4. 6379 : redis
 
 # DB (실행문 - 신규)
 1. make start (docker를 실행합니다.)

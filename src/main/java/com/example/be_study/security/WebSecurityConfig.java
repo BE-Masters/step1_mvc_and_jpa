@@ -31,6 +31,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "/login",
             "/api/v1/oauth/kakao.html",
             "/oauth2/callback/kakao",
+            "/api/v1/mail", "/api/v1/mail/**"
     };
 
 
