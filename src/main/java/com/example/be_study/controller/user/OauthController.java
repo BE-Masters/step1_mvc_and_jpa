@@ -2,7 +2,7 @@ package com.example.be_study.controller.user;
 
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.service.user.domain.User;
-import com.example.be_study.service.user.enums.KakaoOauthResponseCode;
+import com.example.be_study.service.user.enums.OauthResponseCode;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.example.be_study.service.user.service.OauthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public class OauthController {
     ) throws IOException {
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
         response.sendRedirect(redirectUrl);
-        return new DataResponse<>(KakaoOauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, "ok");
+        return new DataResponse<>(OauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, "ok");
     }
 
     @GetMapping("/login/{oauthServerType}/{code}")
@@ -36,7 +36,7 @@ public class OauthController {
             @PathVariable("oauthServerType") OauthServerType oauthServerType,
             @PathVariable("code") String code
     ) {
-        return new DataResponse<>(KakaoOauthResponseCode.LOGIN_SUCCESS,"ok");
+        return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS,"ok");
     }
 
 }
