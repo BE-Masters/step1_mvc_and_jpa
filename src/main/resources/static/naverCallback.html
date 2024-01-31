@@ -33,7 +33,7 @@
          // 페이지 로드 확인을 위한 알림
         var code = getQueryParam('code');
 
-        fetch('http://localhost:8080/api/v1/oauth/login/kakao/'+ code) // 여기에 원하는 API 엔드포인트 주소를 넣으세요.
+        fetch('http://localhost:8080/api/v1/oauth/login/naver/'+ code) // 여기에 원하는 API 엔드포인트 주소를 넣으세요.
             .then(response => response.json())
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
