@@ -51,6 +51,7 @@ public class User extends AbstractBaseUserDeleteEntity {
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
 
+    @Column(name = "refresh_token", nullable = true)
     private String refreshToken;
 
     @Builder
