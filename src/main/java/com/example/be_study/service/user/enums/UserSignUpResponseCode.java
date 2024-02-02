@@ -16,7 +16,7 @@ public enum UserSignUpResponseCode implements DataResponseCode {
 
     ALREADY_EXIST_ORIGIN_EMAIL(200, "이미 가입한 이메일입니다. '이메일 로그인'으로 로그인해주세요."),
 
-    ALREADY_EXIST_NICKNAME(200, "사용 중인 별명입니다."),
+    ALREADY_EXIST_NICKNAME(400, "사용 중인 별명입니다."),
 
     INVALID_EMAIL_FORMAT(200, "이메일 형식이 올바르지 않습니다."),
 

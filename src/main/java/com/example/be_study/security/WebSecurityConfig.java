@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -28,7 +30,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
 
     private final static String[] PERMIT_ALL = {
-            "/api/v1/sign-up/**",
+            "/api/v1/sign-up/**", "/api/v1/sign-up",
             "/login",
             "/api/v1/oauth/naver",
             "api/v1/oauth/login/naver/**",
@@ -98,6 +100,14 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
         return addExceptionHandling(http).build();
+    }
+
+    /**
+     *  비밀번호 암호화
+     */
+    @Bean
+    public PasswordEncoder PasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

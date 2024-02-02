@@ -1,16 +1,24 @@
 package com.example.be_study.service.user.service;
 
+import com.example.be_study.common.jwt.JwtTokenUtil;
+import com.example.be_study.common.jwt.TokenType;
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.common.response.DataResponseCode;
+import com.example.be_study.service.policy.service.PolicyAgreeService;
 import com.example.be_study.service.user.domain.User;
+import com.example.be_study.service.user.dto.UserSignUpRequest;
+import com.example.be_study.service.user.dto.UserSignUpResponse;
 import com.example.be_study.service.user.enums.ProviderType;
 import com.example.be_study.service.user.enums.UserSignUpResponseCode;
+import com.example.be_study.service.user.enums.UserType;
 import com.example.be_study.service.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,8 +29,17 @@ public class UserSignUpService {
 
     public final UserRepository userRepository;
 
-    public UserSignUpService(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final PolicyAgreeService policyAgreeService;
+
+    public UserSignUpService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenUtil jwtTokenUtil, PolicyAgreeService policyAgreeService) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.policyAgreeService = policyAgreeService;
     }
 
     /**
@@ -81,11 +98,47 @@ public class UserSignUpService {
                 String recommendNickname = userNickname + String.format("%02d", (int) (Math.random() * 90) + 10); // 닉네임 추천
                 if (nicknameList.stream().noneMatch(user -> user.getUserNickName().equals(recommendNickname))) {
                     String errorMessage = "'" + recommendNickname + "' 이 별명은 어떠신가요? 별명은 언제든 수정하실 수 있습니다.";
-                    return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus(), errorMessage);
+                    return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus(),
+                            UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseMessage() + errorMessage);
                 }
             }
         } else {
             return new DataResponse<>(UserSignUpResponseCode.SUCCESS);
         }
+    }
+
+    /**
+     *  회원가입
+     */
+    @Transactional(readOnly = false)
+    public DataResponse<UserSignUpResponse> userSignUp(UserSignUpRequest request) {
+
+        DataResponse<DataResponseCode> emailCheck = userIsAlreadyExistEmail(request.getUserEmail()); // 이메일 중복 확인
+        if (Objects.equals(emailCheck.getMessage(), UserSignUpResponseCode.ALREADY_EXIST_ORIGIN_EMAIL.getResponseMessage())){
+            return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_ORIGIN_EMAIL);
+        }
+
+        DataResponse<DataResponseCode> nicknameCheck = userIsAlreadyExistNickname(request.getUserNickname()); // 닉네임 중복 확인
+        if (Objects.equals(nicknameCheck.getStatus(), UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus())){
+            return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME);
+        }
+
+        User user = userRepository.save(User.builder()
+                        .userEmail(request.getUserEmail())
+                        .userPassword(passwordEncoder.encode(request.getUserPassword()))
+                        .userNickName(request.getUserNickname())
+                        .providerType(ProviderType.ORIGIN)
+                        .dormancy(false)
+                        .userType(UserType.BASIC_USER)
+                .build());
+
+        policyAgreeService.saveSignUpPolicy(user.getId(), request.getPolicyTypeList()); // 약관 동의
+
+        String accessToken = jwtTokenUtil.createToken(user, TokenType.AccessToken);
+        String refreshToken = jwtTokenUtil.createToken(user, TokenType.RefreshToken);
+
+        user.updateRefreshToken(refreshToken); // refreshToken 저장
+
+        return new DataResponse<>(UserSignUpResponseCode.SUCCESS, UserSignUpResponse.of(user.getId(), user.getUserNickName(), accessToken));
     }
 }

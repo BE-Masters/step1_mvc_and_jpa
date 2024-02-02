@@ -41,7 +41,7 @@ public class User extends AbstractBaseUserDeleteEntity {
     @Column(name = "provider_type", nullable = false)
     private ProviderType providerType;
 
-    @Column(name = "provider_key", nullable = false)
+    @Column(name = "provider_key", nullable = true)
     private String providerKey;
 
     @Column(name = "user_last_login_date", nullable = false)
@@ -50,6 +50,8 @@ public class User extends AbstractBaseUserDeleteEntity {
 
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
+
+    private String refreshToken;
 
     @Builder
     public User(String userProfile,
@@ -75,6 +77,13 @@ public class User extends AbstractBaseUserDeleteEntity {
     public static User ofOrigin() {
         return User.builder()
                 .build();
+    }
+
+    /**
+     *  RefreshToken 업데이트
+     */
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
 }
