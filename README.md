@@ -1,21 +1,22 @@
-# 기본 설치 프로그램 
+# 기본 설치 프로그램
 ## 아래 프로그램은 미리 설치해주세요
 1. Docker 
 2. LocalStack
+---
 
 # 사용하는 포트 numbers 
 1. 3306 : mysql
 2. 4566 : localstack
 3. 8080 : tomcat
-4. 6379 : redis
+4. 6379 : redis  
+
+---
 
 # DB (실행문 - 신규)
 1. make start (docker를 실행합니다.)
-2. make stop (docker를 종료합니다.)
+2. make stop (docker를 종료합니다.)  
 
-# DB (legacy 실행문 - 아직 사용가능)
-1. terminal에서 /infra 폴더로 이동합니다.
-2. ```docker-compose up -d``` 를 실행합니다.
+---
 
 # localStack 설치
 1. localstack CLI 설치 -> brew install localstack/tap/localstack-cli
@@ -28,10 +29,12 @@
    AWS Secret Access Key [None]: test
    Default region name [None]:
    Default output format [None]:
+---
 
 # localStack S3 목록 보기
-aws --endpoint-url=http://localhost:4566 --profile localstack s3 ls
+aws --endpoint-url=http://localhost:4566 --profile localstack s3 ls  
 
+---
 
 # Flyway
 DB 테이블 형상을 관리하는 툴입니다.
@@ -40,7 +43,18 @@ DB 테이블 형상을 관리하는 툴입니다.
 flywayClean -> flywayMigrate
 
 2. 새롭게 추가된 migrate만 적용하고싶다면 
-flywayMigrate
+flywayMigrate  
 
+  
+---
+# Git 정리 명령어
 
+Mac:
+```
+git fetch --prune && git branch -vv | grep ': gone]'|  awk '{print $1}' | xargs git branch -D
+```
+Window:
+```
+git fetch --prune ; git branch -vv | Select-String -Pattern ': gone]' | ForEach-Object { git branch -D $_.ToString().Trim().Split()[0] }
+```
 
