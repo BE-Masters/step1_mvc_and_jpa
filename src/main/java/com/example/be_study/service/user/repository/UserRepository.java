@@ -16,4 +16,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUserEmail(String userEmail);
 
     List<User> findAllByUserNickNameStartsWith(String userNickname);
+
+    Optional<User> findTopByOrderByIdDesc();
 }
