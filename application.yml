@@ -19,8 +19,8 @@ jwt:
 mail:
   host: smtp.gmail.com
   port: 587
-#  username: ${GOOGLE_SMTP_ID}
-#  password: ${GOOGLE_SMTP_PASSWORD}
+  username: ${GOOGLE_SMTP_ID}
+  password: ${GOOGLE_SMTP_PASSWORD}
   properties:
     mail:
       smtp:
