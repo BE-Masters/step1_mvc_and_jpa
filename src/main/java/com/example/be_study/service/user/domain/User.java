@@ -1,6 +1,7 @@
 package com.example.be_study.service.user.domain;
 
 import com.example.be_study.service.base.AbstractBaseUserDeleteEntity;
+import com.example.be_study.service.user.enums.DeviceType;
 import com.example.be_study.service.user.enums.ProviderType;
 import com.example.be_study.service.user.enums.UserType;
 import jakarta.persistence.*;
@@ -50,17 +51,15 @@ public class User extends AbstractBaseUserDeleteEntity {
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
 
+    @Column(name = "age", nullable = true, columnDefinition = "유저 나이")
+    private short age;
+
+    @Column(name = "device_type", nullable = true, columnDefinition = "디바이스 타입 - AOS, IOS, WEB")
+    private DeviceType deviceType;
+
     @Builder
     public User(String userProfile,
-                String userEmail,
-                String userPassword,
-                UserType userType,
-                String userNickName,
-                ProviderType providerType,
-                String providerKey,
-                LocalDateTime userLastLoginDate,
-                Boolean dormancy
-    ) {
+                String userEmail, String userPassword, UserType userType, String userNickName, ProviderType providerType, String providerKey, LocalDateTime userLastLoginDate, Boolean dormancy, short age, DeviceType deviceType) {
         this.userProfile = userProfile;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
@@ -70,19 +69,19 @@ public class User extends AbstractBaseUserDeleteEntity {
         this.providerKey = providerKey;
         this.userLastLoginDate = userLastLoginDate;
         this.dormancy = dormancy;
+        this.age = age;
+        this.deviceType = deviceType;
         this.setDeleted(false);
     }
 
     public static User ofKakao() {
         return User.builder()
                 .build();
-
     }
 
     public static User ofOrigin() {
         return User.builder()
                 .build();
-
     }
 
 }

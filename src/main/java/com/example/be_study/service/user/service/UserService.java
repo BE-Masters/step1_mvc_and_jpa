@@ -1,6 +1,7 @@
 package com.example.be_study.service.user.service;
 
 import com.example.be_study.service.user.domain.User;
+import com.example.be_study.service.user.repository.UserMetricRepository;
 import com.example.be_study.service.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,4 +29,6 @@ public class UserService {
         return userRepository
                 .findByProviderKey(user.getProviderKey()).orElseGet(() -> userRepository.save(user));
     }
+
+
 }

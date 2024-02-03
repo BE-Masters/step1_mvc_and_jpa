@@ -19,8 +19,8 @@ jwt:
 mail:
   host: smtp.gmail.com
   port: 587
-  username: ${GOOGLE_SMTP_ID}
-  password: ${GOOGLE_SMTP_PASSWORD}
+#  username: ${GOOGLE_SMTP_ID}
+#  password: ${GOOGLE_SMTP_PASSWORD}
   properties:
     mail:
       smtp:
@@ -77,6 +77,10 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        jdbc:
+          batch_size: 100
+        order_inserts: true
+        order_updates: true
 
   flyway:
     enabled: false
