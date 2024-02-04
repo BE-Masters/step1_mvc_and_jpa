@@ -79,12 +79,6 @@ public class User extends AbstractBaseUserDeleteEntity {
 
     }
 
-    public static User ofNaver() {
-        return User.builder()
-                .build();
-
-    }
-
     public static User ofOrigin() {
         return User.builder()
                 .build();
