@@ -3,7 +3,8 @@ package com.example.be_study.service.user.enums;
 import java.util.Locale;
 
 public enum OauthServerType {
-    KAKAO("카카오");
+    KAKAO("카카오"), NAVER("네이버");
+    
     private final String description;
 
     OauthServerType(String description) {

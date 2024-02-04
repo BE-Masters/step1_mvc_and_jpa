@@ -17,13 +17,12 @@ public class OauthService {
         this.oauthMemberClientComposite = oauthMemberClientComposite;
         this.userService = userService;
     }
-
     public String getAuthCodeRequestUrl(OauthServerType oauthServerType) {
         return authCodeRequestUrlProviderComposite.provide(oauthServerType);
     }
 
     public User login(OauthServerType oauthServerType, String authCode) {
-        User user = oauthMemberClientComposite.fetch(oauthServerType, authCode);
+        User user = oauthMemberClientComposite.requestAuthorizationAndAccessToken(oauthServerType, authCode);
         return userService.saveUser(user);
     }
 }
