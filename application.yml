@@ -52,9 +52,9 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/oauth2/callback/kakao
+            client-id: 60a924edb10f7e39450411a48e2a588d
+            client-secret: yqhN4Wtk2jUsV1wE1xawkJ9IgX6g7JlQ
+            redirect-uri: http://localhost:8080/oAuth.html
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao
@@ -143,7 +143,7 @@ spring:
           kakao:
             client-id: 60a924edb10f7e39450411a48e2a588d
             client-secret: yqhN4Wtk2jUsV1wE1xawkJ9IgX6g7JlQ
-            redirect-uri: http://localhost:8080/oauth2/callback/kakao
+            redirect-uri:  http://localhost:8080/oAuth.html
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao

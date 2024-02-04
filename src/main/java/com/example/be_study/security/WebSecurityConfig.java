@@ -4,6 +4,7 @@ import com.example.be_study.common.jwt.JwtAuthenticationFilter;
 import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
 import com.example.be_study.service.oauth.OauthServerTypeConverter;
+import com.example.be_study.service.user.repository.UserRepository;
 import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "/login",
             "/api/v1/oauth/naver",
             "api/v1/oauth/login/naver/**",
-            "/api/v1/oauth/kakao.html",
+            "/api/v1/oauth/**",
             "/oauth2/callback/kakao",
             "/api/v1/mail", "/api/v1/mail/**"
     };
@@ -70,7 +71,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     @Profile("local")
-    public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain localSecurityFilterChain(HttpSecurity http,
+                                                        UserRepository userRepository) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
