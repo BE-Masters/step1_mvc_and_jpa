@@ -15,11 +15,6 @@ public class HttpInterfaceConfig {
         return createHttpInterface(KakaoApiClient.class);
     }
 
-    @Bean
-    public NaverApiClient naverApiClient() {
-        return createHttpInterface(NaverApiClient.class);
-    }
-
     private <T> T createHttpInterface(Class<T> clazz) {
         WebClient webClient = WebClient.create();
         HttpServiceProxyFactory build = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient)).build();

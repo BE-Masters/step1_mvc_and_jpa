@@ -18,12 +18,14 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoMemberClient implements OauthMemberClient {
 
     private final KakaoApiClient kakaoApiClient;
-    private final KakaoOauthConfig kakaoOauthConfig;
+    private final KakaoOauthRegistrationConfig kakaoOauthRegistrationConfig;
+    private final KakaoOauthProviderConfig kakaoOauthProviderConfig;
     private RestTemplate restTemplate;
 
-    public KakaoMemberClient(KakaoApiClient kakaoApiClient, KakaoOauthConfig kakaoOauthConfig, RestTemplate restTemplate) {
+    public KakaoMemberClient(KakaoApiClient kakaoApiClient, KakaoOauthRegistrationConfig kakaoOauthRegistrationConfig, KakaoOauthProviderConfig kakaoOauthProviderConfig, RestTemplate restTemplate) {
         this.kakaoApiClient = kakaoApiClient;
-        this.kakaoOauthConfig = kakaoOauthConfig;
+        this.kakaoOauthRegistrationConfig = kakaoOauthRegistrationConfig;
+        this.kakaoOauthProviderConfig = kakaoOauthProviderConfig;
         this.restTemplate = restTemplate;
     }
 
@@ -33,14 +35,14 @@ public class KakaoMemberClient implements OauthMemberClient {
     }
 
     @Override
-    public User fetch(String authCode) {
+    public User requestAuthorizationAndAccessToken(String authCode) {
         MultiValueMap<String, String>  requestContent = tokenRequestParams(authCode);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type","application/x-www-form-urlencoded;charset=utf-8");
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestContent, headers);
 
-        String result = restTemplate.postForObject("https://kauth.kakao.com/oauth/token",entity, String.class);
+        String result = restTemplate.postForObject(kakaoOauthProviderConfig.tokenUri(),entity, String.class);
 
         KakaoToken tokenInfo = new Gson().fromJson(result, KakaoToken.class);
         KakaoMemberResponse kakaoMemberResponse = kakaoApiClient.fetchMember("Bearer " + tokenInfo.getAccessToken());
@@ -50,10 +52,10 @@ public class KakaoMemberClient implements OauthMemberClient {
     private MultiValueMap<String, String> tokenRequestParams(String authCode) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", kakaoOauthConfig.clientId());
-        params.add("redirect_uri", kakaoOauthConfig.redirectUri());
+        params.add("client_id", kakaoOauthRegistrationConfig.clientId());
+        params.add("redirect_uri", kakaoOauthRegistrationConfig.redirectUri());
         params.add("code", authCode);
-        params.add("client_secret", kakaoOauthConfig.clientSecret());
+        params.add("client_secret", kakaoOauthRegistrationConfig.clientSecret());
         return params;
     }
 }

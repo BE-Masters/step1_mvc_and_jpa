@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record NaverMemberResponse(
-        Long id,
-        boolean hasSignedUp,
-        LocalDateTime connectedAt,
-        NaverAccount naverAccount
+        String resultcode,
+        String message,
+        Response response
+
 ) {
 
     public User toDomain() {
@@ -21,48 +21,28 @@ public record NaverMemberResponse(
         return User.builder()
                 .providerType(ProviderType.NAVER)
                 .userLastLoginDate(currentDateTime)
-                .providerKey(naverAccount.email)
-                .userEmail(naverAccount.email)
-                .userNickName(naverAccount.profile.nickname)
-                .userProfile(naverAccount.profile.profileImageUrl)
+                .providerKey(response.email)
+                .userEmail(response.email)
+                .userNickName(response.nickname)
+                .userProfile(response.profileImage)
                 .dormancy(false)
                 .userType(UserType.BASIC_USER)
                 .build();
     }
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public record NaverAccount(
-            boolean profileNeedsAgreement,
-            boolean profileNicknameNeedsAgreement,
-            boolean profileImageNeedsAgreement,
-            Profile profile,
-            boolean nameNeedsAgreement,
+    public record Response(
+            String id,
+            String nickname,
             String name,
-            boolean emailNeedsAgreement,
-            boolean isEmailValid,
-            boolean isEmailVerified,
             String email,
-            boolean ageRangeNeedsAgreement,
-            String ageRange,
-            boolean birthyearNeedsAgreement,
-            String birthyear,
-            boolean birthdayNeedsAgreement,
-            String birthday,
-            String birthdayType,
-            boolean genderNeedsAgreement,
             String gender,
-            boolean phoneNumberNeedsAgreement,
-            String phoneNumber,
-            LocalDateTime ciAuthenticatedAt
+            String age,
+            String birthday,
+            String profileImage,
+            String birthyear,
+            String mobile
     ) {
     }
 
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public record Profile(
-            String nickname,
-            String thumbnailImageUrl,
-            String profileImageUrl,
-            boolean isDefaultImage
-    ) {
-    }
 }

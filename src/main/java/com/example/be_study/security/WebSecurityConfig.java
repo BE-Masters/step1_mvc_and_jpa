@@ -29,6 +29,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final static String[] PERMIT_ALL = {
             "/api/v1/sign-up/**",
             "/login",
+            "/api/v1/oauth/naver",
+            "api/v1/oauth/login/naver/**",
             "/api/v1/oauth/kakao.html",
             "/oauth2/callback/kakao",
             "/api/v1/mail", "/api/v1/mail/**"

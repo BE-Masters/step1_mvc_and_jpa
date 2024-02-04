@@ -7,16 +7,16 @@ import lombok.Getter;
 public class NaverToken {
 
     @SerializedName("access_token")
-    String accessToken;
+    private String accessToken;
 
     @SerializedName("refresh_token")
-    String refreshToken;
+    private String refreshToken;
 
     @SerializedName("token_type")
-    String tokenType;
+    private String tokenType;
 
     @SerializedName("expires_in")
-    Integer refreshTokenExpiresIn;
+    private Integer refreshTokenExpiresIn;
 
-    String scope;
+    private String scope;
 }

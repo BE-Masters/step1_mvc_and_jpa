@@ -7,5 +7,5 @@ public interface OauthMemberClient {
 
     OauthServerType supportServer();
 
-    User fetch(String code);
+    User requestAuthorizationAndAccessToken(String code);
 }

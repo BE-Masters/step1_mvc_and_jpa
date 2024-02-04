@@ -27,16 +27,16 @@ public class OauthController {
             @PathVariable("oauthServerType") OauthServerType oauthServerType, HttpServletResponse response
     ) throws IOException {
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
-        response.sendRedirect(redirectUrl);
-        return new DataResponse<>(OauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, "ok");
+        return new DataResponse<>(OauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, redirectUrl);
     }
 
     @GetMapping("/login/{oauthServerType}/{code}")
-    public DataResponse<String> login(
+    public DataResponse<User> login(
             @PathVariable("oauthServerType") OauthServerType oauthServerType,
             @PathVariable("code") String code
     ) {
-        return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS,"ok");
+        User login = oauthService.login(oauthServerType, code);
+        return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS,login);
     }
 
 }
