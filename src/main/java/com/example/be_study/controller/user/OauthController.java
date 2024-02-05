@@ -6,10 +6,10 @@ import com.example.be_study.service.user.enums.OauthResponseCode;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.example.be_study.service.user.service.OauthService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public class OauthController {
             @PathVariable("code") String code
     ) {
         User login = oauthService.login(oauthServerType, code);
-        return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS,login);
+        return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS, login);
     }
 
 }

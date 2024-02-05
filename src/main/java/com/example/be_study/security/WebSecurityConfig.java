@@ -22,9 +22,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class WebSecurityConfig implements WebMvcConfigurer {
 
-    private final JwtTokenUtil jwtTokenUtil;
-
-    private final JwtService jwtService;
+    private final static String[] RESOURCE_PERMIT_ALL = {
+            "/api/v1/oauth/kakao.html",
+            "/oAuth.html",
+            "/css/**",
+            "/js/**",
+            "/images/**"
+    };
 
     private final static String[] PERMIT_ALL = {
             "/api/v1/sign-up/**",
@@ -33,8 +37,14 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "api/v1/oauth/login/naver/**",
             "/api/v1/oauth/kakao.html",
             "/oauth2/callback/kakao",
-            "/api/v1/mail", "/api/v1/mail/**"
+            "/api/v1/mail",
+            "/api/v1/mail/**"
     };
+
+    @Bean
+    public JwtAuthenticationFilter tokenAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
 
     @Override
@@ -57,10 +67,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         registry.addConverter(new OauthServerTypeConverter());
     }
 
-    public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.jwtService = jwtService;
-    }
 
     public HttpSecurity addExceptionHandling(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.exceptionHandling((authenticationManager) -> authenticationManager
@@ -75,11 +81,12 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
+                        .requestMatchers(RESOURCE_PERMIT_ALL).permitAll()
                         .requestMatchers(PERMIT_ALL).permitAll()
                         //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return addExceptionHandling(http).build();
     }
@@ -94,7 +101,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return addExceptionHandling(http).build();
     }
 

@@ -1,8 +1,11 @@
 package com.example.be_study.controller.user;
 
+import com.example.be_study.common.jwt.CurrentUser;
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.common.response.DataResponseCode;
+import com.example.be_study.service.user.domain.UserPrincipal;
 import com.example.be_study.service.user.service.UserSignUpService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +21,9 @@ public class UserSignUpController {
         this.userSignUpService = userSignUpService;
     }
 
+
     /**
-     *  이메일 중복 확인
+     * 이메일 중복 확인
      */
     @GetMapping(value = "/verify-email", name = "이메일 중복 확인")
     public DataResponse<DataResponseCode> userIsAlreadyExistEmail(@RequestParam(name = "userEmail") String userEmail) {
@@ -28,7 +32,7 @@ public class UserSignUpController {
     }
 
     /**
-     *  닉네임 중복 확인
+     * 닉네임 중복 확인
      */
     @GetMapping(value = "/verify-nickname", name = "닉네임 중복 확인")
     public DataResponse<DataResponseCode> userIsAlreadyExistNickname(@RequestParam(name = "userNickname") String userNickname) {

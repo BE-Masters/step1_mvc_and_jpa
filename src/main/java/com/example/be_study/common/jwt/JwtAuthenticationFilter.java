@@ -1,29 +1,34 @@
 package com.example.be_study.common.jwt;
 
 import com.example.be_study.common.response.DataResponse;
+import com.example.be_study.service.user.service.UserService;
+import io.jsonwebtoken.Claims;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-    private final JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JwtService jwtService;
 
-    private final JwtService jwtService;
-
-    public JwtAuthenticationFilter(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.jwtService = jwtService;
-    }
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,11 +39,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.isNotBlank(token)) {
             tokenValidation(token);
 
-            Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
+            UserDetails userDetails = getUserPrincipal(token);
+            logger.info(String.format("사용자:  %s, 요청 url: @(%s), %s", userDetails.getUsername(), request.getMethod(), request.getRequestURL()));
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private UserDetails getUserPrincipal(String token) {
+        Claims claims = jwtTokenUtil.getClaims(token, TokenType.AccessToken);
+
+        return userService.loadUserBy(Long.parseLong(claims.getSubject()), claims);
     }
 
     private void debugLogging(HttpServletRequest request) {

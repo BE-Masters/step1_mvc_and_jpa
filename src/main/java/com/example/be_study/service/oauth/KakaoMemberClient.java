@@ -42,7 +42,7 @@ public class KakaoMemberClient implements OauthMemberClient {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestContent, headers);
 
-        String result = restTemplate.postForObject(kakaoOauthProviderConfig.tokenUri(),entity, String.class);
+        String result = restTemplate. postForObject(kakaoOauthProviderConfig.tokenUri(),entity, String.class);
 
         KakaoToken tokenInfo = new Gson().fromJson(result, KakaoToken.class);
         KakaoMemberResponse kakaoMemberResponse = kakaoApiClient.fetchMember("Bearer " + tokenInfo.getAccessToken());
