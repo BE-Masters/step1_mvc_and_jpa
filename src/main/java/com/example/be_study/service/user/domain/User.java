@@ -51,15 +51,9 @@ public class User extends AbstractBaseUserDeleteEntity {
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
 
-    @Column(name = "age", nullable = true, columnDefinition = "유저 나이")
-    private short age;
-
-    @Column(name = "device_type", nullable = true, columnDefinition = "디바이스 타입 - AOS, IOS, WEB")
-    private DeviceType deviceType;
-
     @Builder
     public User(String userProfile,
-                String userEmail, String userPassword, UserType userType, String userNickName, ProviderType providerType, String providerKey, LocalDateTime userLastLoginDate, Boolean dormancy, short age, DeviceType deviceType) {
+                String userEmail, String userPassword, UserType userType, String userNickName, ProviderType providerType, String providerKey, LocalDateTime userLastLoginDate, Boolean dormancy) {
         this.userProfile = userProfile;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
@@ -69,8 +63,7 @@ public class User extends AbstractBaseUserDeleteEntity {
         this.providerKey = providerKey;
         this.userLastLoginDate = userLastLoginDate;
         this.dormancy = dormancy;
-        this.age = age;
-        this.deviceType = deviceType;
+
         this.setDeleted(false);
     }
 
