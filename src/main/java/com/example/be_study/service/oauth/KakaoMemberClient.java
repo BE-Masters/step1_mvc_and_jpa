@@ -5,6 +5,7 @@ import com.example.be_study.service.user.dto.KakaoMemberResponse;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.google.gson.Gson;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Component
+@Slf4j
 public class KakaoMemberClient implements OauthMemberClient {
 
     private final KakaoApiClient kakaoApiClient;
