@@ -1,14 +1,19 @@
 package com.example.be_study.common.jwt;
 
 import com.example.be_study.common.response.DataResponse;
+import com.example.be_study.service.user.service.UserDetailService;
+import io.jsonwebtoken.Claims;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -20,9 +25,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    public JwtAuthenticationFilter(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {
+    private final UserDetailService userDetailsService;
+
+    public JwtAuthenticationFilter(JwtTokenUtil jwtTokenUtil, JwtService jwtService, UserDetailService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -34,8 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.isNotBlank(token)) {
             tokenValidation(token);
 
-            Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            Claims claims = jwtTokenUtil.getClaims(token, TokenType.AccessToken);
+
+            UserDetails userDetails = userDetailsService.loadUserById(Long.parseLong(claims.getSubject()));
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);

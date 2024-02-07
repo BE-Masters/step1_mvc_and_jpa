@@ -5,6 +5,7 @@ import com.example.be_study.service.user.dto.KakaoMemberResponse;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.google.gson.Gson;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
@@ -15,12 +16,14 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Component
+@Slf4j
 public class KakaoMemberClient implements OauthMemberClient {
 
     private final KakaoApiClient kakaoApiClient;
     private final KakaoOauthRegistrationConfig kakaoOauthRegistrationConfig;
     private final KakaoOauthProviderConfig kakaoOauthProviderConfig;
     private RestTemplate restTemplate;
+
 
     public KakaoMemberClient(KakaoApiClient kakaoApiClient, KakaoOauthRegistrationConfig kakaoOauthRegistrationConfig, KakaoOauthProviderConfig kakaoOauthProviderConfig, RestTemplate restTemplate) {
         this.kakaoApiClient = kakaoApiClient;
@@ -36,6 +39,7 @@ public class KakaoMemberClient implements OauthMemberClient {
 
     @Override
     public User requestAuthorizationAndAccessToken(String authCode) {
+
         MultiValueMap<String, String>  requestContent = tokenRequestParams(authCode);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type","application/x-www-form-urlencoded;charset=utf-8");
@@ -46,6 +50,7 @@ public class KakaoMemberClient implements OauthMemberClient {
 
         KakaoToken tokenInfo = new Gson().fromJson(result, KakaoToken.class);
         KakaoMemberResponse kakaoMemberResponse = kakaoApiClient.fetchMember("Bearer " + tokenInfo.getAccessToken());
+
         return kakaoMemberResponse.toDomain();
     }
 
