@@ -1,5 +1,6 @@
 package com.example.be_study.service.user.dto;
 
+import com.example.be_study.service.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +21,10 @@ public class UserSignUpResponse {
         this.accessToken = accessToken;
     }
 
-    public static UserSignUpResponse of(Long userId, String userNickName, String accessToken) {
+    public static UserSignUpResponse of(User user, String accessToken) {
         return UserSignUpResponse.builder()
-                .userId(userId)
-                .userNickName(userNickName)
+                .userId(user.getId())
+                .userNickName(user.getUserNickName())
                 .accessToken(accessToken)
                 .build();
     }

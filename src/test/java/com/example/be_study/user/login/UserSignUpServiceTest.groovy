@@ -3,8 +3,6 @@ package com.example.be_study.user.login
 import com.example.be_study.common.jwt.JwtTokenUtil
 import com.example.be_study.service.policy.service.PolicyAgreeService
 import com.example.be_study.service.user.domain.User
-import com.example.be_study.service.user.enums.ProviderType
-import com.example.be_study.service.user.enums.UserType
 import com.example.be_study.service.user.repository.UserRepository
 import com.example.be_study.service.user.service.UserSignUpService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -30,5 +28,6 @@ abstract class UserSignUpServiceTest extends Specification {
         userSignUpService = new UserSignUpService(
                 userRepository, passwordEncoder, jwtTokenUtil, policyAgreeService
         )
+        userRepository.save(_) >> user
     }
 }

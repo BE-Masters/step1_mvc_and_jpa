@@ -20,7 +20,8 @@ public class UserSignUpRequest {
     private String userEmail;
 
     @NotBlank(message = "비밀번호는 필수입니다.")
-    @Size(min = 8, max = 20, message = "비밀번호는 최소 8자 이상 입력해야 됩니다.")
+    @Size(min = 8, message = "비밀번호는 최소 8자 이상 입력해야 됩니다.")
+    @Pattern(regexp = "\\S+$", message = "공백은 사용할 수 없습니다.")
     private String userPassword;
 
     @NotBlank(message = "닉네임은 필수입니다.")

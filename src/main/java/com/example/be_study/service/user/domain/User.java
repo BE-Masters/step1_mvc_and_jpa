@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -75,8 +76,14 @@ public class User extends AbstractBaseUserDeleteEntity {
                 .build();
     }
 
-    public static User ofOrigin() {
+    public static User ofOrigin(String userEmail, PasswordEncoder passwordEncoder, String userPassword, String userNickName) {
         return User.builder()
+                .userEmail(userEmail)
+                .userPassword(passwordEncoder.encode(userPassword))
+                .userNickName(userNickName)
+                .providerType(ProviderType.ORIGIN)
+                .dormancy(false)
+                .userType(UserType.BASIC_USER)
                 .build();
     }
 

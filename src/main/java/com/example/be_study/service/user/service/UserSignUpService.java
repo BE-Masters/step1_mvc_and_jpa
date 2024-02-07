@@ -1,16 +1,20 @@
 package com.example.be_study.service.user.service;
 
+import com.example.be_study.common.jwt.JwtResponseMessage;
 import com.example.be_study.common.jwt.JwtTokenUtil;
 import com.example.be_study.common.jwt.TokenType;
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.common.response.DataResponseCode;
 import com.example.be_study.service.policy.service.PolicyAgreeService;
 import com.example.be_study.service.user.domain.User;
+import com.example.be_study.service.user.dto.UserRefreshAccessTokenResponse;
+import com.example.be_study.service.user.dto.UserRefreshTokenRequest;
 import com.example.be_study.service.user.dto.UserSignUpRequest;
 import com.example.be_study.service.user.dto.UserSignUpResponse;
 import com.example.be_study.service.user.enums.ProviderType;
+import com.example.be_study.service.user.enums.UserResponseMessage;
 import com.example.be_study.service.user.enums.UserSignUpResponseCode;
-import com.example.be_study.service.user.enums.UserType;
+import com.example.be_study.service.user.exception.NotFoundUserException;
 import com.example.be_study.service.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,7 +85,7 @@ public class UserSignUpService {
      *  닉네임 중복 확인
      */
     @Transactional(readOnly = true)
-    public DataResponse<DataResponseCode> userIsAlreadyExistNickname(String userNickname) {
+    public DataResponse<String> userIsAlreadyExistNickname(String userNickname) {
         if (userNickname == null || userNickname.equals("")){
             return new DataResponse<>(UserSignUpResponseCode.REQUIRED_FIELD);
         }
@@ -98,8 +101,7 @@ public class UserSignUpService {
                 String recommendNickname = userNickname + String.format("%02d", (int) (Math.random() * 90) + 10); // 닉네임 추천
                 if (nicknameList.stream().noneMatch(user -> user.getUserNickName().equals(recommendNickname))) {
                     String errorMessage = "'" + recommendNickname + "' 이 별명은 어떠신가요? 별명은 언제든 수정하실 수 있습니다.";
-                    return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus(),
-                            UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseMessage() + errorMessage);
+                    return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME, errorMessage);
                 }
             }
         } else {
@@ -112,25 +114,7 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = false)
     public DataResponse<UserSignUpResponse> userSignUp(UserSignUpRequest request) {
-
-        DataResponse<DataResponseCode> emailCheck = userIsAlreadyExistEmail(request.getUserEmail()); // 이메일 중복 확인
-        if (Objects.equals(emailCheck.getMessage(), UserSignUpResponseCode.ALREADY_EXIST_ORIGIN_EMAIL.getResponseMessage())){
-            return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_ORIGIN_EMAIL);
-        }
-
-        DataResponse<DataResponseCode> nicknameCheck = userIsAlreadyExistNickname(request.getUserNickname()); // 닉네임 중복 확인
-        if (Objects.equals(nicknameCheck.getStatus(), UserSignUpResponseCode.ALREADY_EXIST_NICKNAME.getResponseStatus())){
-            return new DataResponse<>(UserSignUpResponseCode.ALREADY_EXIST_NICKNAME);
-        }
-
-        User user = userRepository.save(User.builder()
-                        .userEmail(request.getUserEmail())
-                        .userPassword(passwordEncoder.encode(request.getUserPassword()))
-                        .userNickName(request.getUserNickname())
-                        .providerType(ProviderType.ORIGIN)
-                        .dormancy(false)
-                        .userType(UserType.BASIC_USER)
-                .build());
+        User user = userRepository.save(User.ofOrigin(request.getUserEmail(), passwordEncoder, request.getUserPassword(), request.getUserNickname()));
 
         policyAgreeService.saveSignUpPolicy(user.getId(), request.getPolicyTypeList()); // 약관 동의
 
@@ -139,6 +123,26 @@ public class UserSignUpService {
 
         user.updateRefreshToken(refreshToken); // refreshToken 저장
 
-        return new DataResponse<>(UserSignUpResponseCode.SUCCESS, UserSignUpResponse.of(user.getId(), user.getUserNickName(), accessToken));
+        return new DataResponse<>(UserSignUpResponseCode.SUCCESS, UserSignUpResponse.of(user, accessToken));
+    }
+
+    /**
+     *  AccessToken 재발급
+     */
+    @Transactional(readOnly = false)
+    public DataResponse<UserRefreshAccessTokenResponse> refreshAccessToken(UserRefreshTokenRequest request) {
+        if (jwtTokenUtil.isExpired(request.getRefreshToken(), TokenType.RefreshToken)) {
+            return new DataResponse<>(JwtResponseMessage.TOKEN_EXPIRED_MESSAGE);
+        }
+
+        Long userId = jwtTokenUtil.getUserId(request.getRefreshToken(), TokenType.RefreshToken);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(UserResponseMessage.NOT_FOUND_USER));
+
+        if (!user.getRefreshToken().equals(request.getRefreshToken())){
+            return new DataResponse<>(JwtResponseMessage.TOKEN_PERMISSION_ERROR_MESSAGE);
+        }
+
+        String accessToken = jwtTokenUtil.createToken(user, TokenType.AccessToken);
+        return new DataResponse<>(UserSignUpResponseCode.SUCCESS, UserRefreshAccessTokenResponse.of(accessToken));
     }
 }

@@ -1,7 +1,7 @@
 package com.example.be_study.common.error;
 
-import com.example.be_study.service.user.exception.UserBadRequestApiException;
 import com.example.be_study.common.response.DataResponse;
+import com.example.be_study.service.user.exception.UserBadRequestApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,26 +49,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DataResponse<String> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) throws MethodArgumentNotValidException {
-        log.error("잘못된 Request 값이 존재합니다.");
         BindingResult bindingResult = e.getBindingResult();
 
-        FieldError fieldError = null;
         // @NotBlank, @NotNull, @Size, @Pattern 어노테이션 순으로 유효성 검사 체크
         List<String> errorCase = List.of("NotBlank", "NotNull", "Size", "Pattern");
 
-        for (String errorCode : errorCase) {
-            fieldError = bindingResult.getFieldErrors().stream()
-                    .filter(error -> Objects.equals(error.getCode(), errorCode))
-                    .findFirst()
-                    .orElse(null);
+        List<FieldError> fieldErrors = errorCase.stream()
+                .flatMap(errorCode -> bindingResult.getFieldErrors().stream()
+                        .filter(error -> Objects.equals(error.getCode(), errorCode)))
+                .toList();
 
-            if (fieldError != null) {
-                break;
-            }
-        }
-
-        String message = (fieldError != null) ? fieldError.getDefaultMessage() : bindingResult.getFieldError().getField() + "의 형식이 올바르지 않습니다.";
-
+        String message = (!fieldErrors.isEmpty()) ? fieldErrors.get(0).getDefaultMessage() : bindingResult.getFieldError().getField() + "의 형식이 올바르지 않습니다.";
         return DataResponse.of(HttpStatus.EXPECTATION_FAILED, message);
     }
 }
