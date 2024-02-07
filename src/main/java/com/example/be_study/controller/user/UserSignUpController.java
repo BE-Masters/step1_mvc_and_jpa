@@ -2,11 +2,13 @@ package com.example.be_study.controller.user;
 
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.common.response.DataResponseCode;
+import com.example.be_study.service.user.dto.UserRefreshAccessTokenResponse;
+import com.example.be_study.service.user.dto.UserRefreshTokenRequest;
+import com.example.be_study.service.user.dto.UserSignUpRequest;
+import com.example.be_study.service.user.dto.UserSignUpResponse;
 import com.example.be_study.service.user.service.UserSignUpService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/sign-up")
@@ -31,8 +33,26 @@ public class UserSignUpController {
      *  닉네임 중복 확인
      */
     @GetMapping(value = "/verify-nickname", name = "닉네임 중복 확인")
-    public DataResponse<DataResponseCode> userIsAlreadyExistNickname(@RequestParam(name = "userNickname") String userNickname) {
-        DataResponse<DataResponseCode> response = userSignUpService.userIsAlreadyExistNickname(userNickname);
+    public DataResponse<String> userIsAlreadyExistNickname(@RequestParam(name = "userNickname") String userNickname) {
+        DataResponse<String> response = userSignUpService.userIsAlreadyExistNickname(userNickname);
+        return response;
+    }
+
+    /**
+     *  회원가입
+     */
+    @PostMapping(name = "자체 회원가입")
+    public DataResponse<UserSignUpResponse> userSignUp(@Valid @RequestBody UserSignUpRequest request) {
+        DataResponse<UserSignUpResponse> response = userSignUpService.userSignUp(request);
+        return response;
+    }
+
+    /**
+     *  AccessToken 재발급
+     */
+    @PutMapping(name = "AccessToken 재발급")
+    public DataResponse<UserRefreshAccessTokenResponse> refreshAccessToken(@RequestBody UserRefreshTokenRequest request) {
+        DataResponse<UserRefreshAccessTokenResponse> response = userSignUpService.refreshAccessToken(request);
         return response;
     }
 }

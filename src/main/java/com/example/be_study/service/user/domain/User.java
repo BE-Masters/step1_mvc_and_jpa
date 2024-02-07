@@ -1,6 +1,7 @@
 package com.example.be_study.service.user.domain;
 
 import com.example.be_study.service.base.AbstractBaseUserDeleteEntity;
+import com.example.be_study.service.user.dto.UserSignUpRequest;
 import com.example.be_study.service.user.enums.DeviceType;
 import com.example.be_study.service.user.enums.ProviderType;
 import com.example.be_study.service.user.enums.UserType;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -41,7 +43,7 @@ public class User extends AbstractBaseUserDeleteEntity {
     @Column(name = "provider_type", nullable = false)
     private ProviderType providerType;
 
-    @Column(name = "provider_key", nullable = false)
+    @Column(name = "provider_key", nullable = true)
     private String providerKey;
 
     @Column(name = "user_last_login_date", nullable = false)
@@ -50,6 +52,9 @@ public class User extends AbstractBaseUserDeleteEntity {
 
     @Column(name = "dormancy", nullable = false, columnDefinition = "boolean default false")
     private Boolean dormancy;
+
+    @Column(name = "refresh_token", nullable = true)
+    private String refreshToken;
 
     @Builder
     public User(String userProfile,
@@ -72,9 +77,22 @@ public class User extends AbstractBaseUserDeleteEntity {
                 .build();
     }
 
-    public static User ofOrigin() {
+    public static User ofOrigin(UserSignUpRequest request, PasswordEncoder passwordEncoder) {
         return User.builder()
+                .userEmail(request.getUserEmail())
+                .userPassword(passwordEncoder.encode(request.getUserPassword()))
+                .userNickName(request.getUserNickname())
+                .providerType(ProviderType.ORIGIN)
+                .dormancy(false)
+                .userType(UserType.BASIC_USER)
                 .build();
+    }
+
+    /**
+     *  RefreshToken 업데이트
+     */
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
 }
