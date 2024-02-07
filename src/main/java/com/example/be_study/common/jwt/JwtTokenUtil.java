@@ -7,14 +7,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
@@ -50,21 +46,6 @@ public class JwtTokenUtil {
     public Claims getClaims(String token, TokenType tokenType) {
         String secretKey = TokenType.AccessToken.equals(tokenType) ? jwtProperties.getAccessTokenKey() : jwtProperties.getRefreshTokenKey();
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-    }
-
-    /**
-     *  권한 정보 획득
-     */
-    public UsernamePasswordAuthenticationToken getAuthentication(String token, TokenType tokenType) {
-        Claims claims = this.getClaims(token, tokenType);
-        List<String> roles = new ArrayList<>();
-        roles.add(claims.get("roles", String.class));
-
-        Collection<? extends GrantedAuthority> getAuthorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        return new UsernamePasswordAuthenticationToken(claims, "", getAuthorities);
     }
 
     /**

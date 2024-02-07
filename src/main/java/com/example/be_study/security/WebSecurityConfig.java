@@ -4,7 +4,7 @@ import com.example.be_study.common.jwt.JwtAuthenticationFilter;
 import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
 import com.example.be_study.service.oauth.OauthServerTypeConverter;
-import com.example.be_study.service.user.repository.UserRepository;
+import com.example.be_study.service.user.service.CustomUserDetailsService;
 import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,12 +29,12 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     private final JwtService jwtService;
 
+    private final CustomUserDetailsService userDetailsService;
+
     private final static String[] PERMIT_ALL = {
             "/api/v1/sign-up/**", "/api/v1/sign-up",
             "/login",
-            "/api/v1/oauth/naver",
-            "api/v1/oauth/login/naver/**",
-            "/api/v1/oauth/**",
+            "/api/v1/oauth/kakao.html",
             "/oauth2/callback/kakao",
             "/api/v1/mail", "/api/v1/mail/**"
     };
@@ -60,9 +60,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         registry.addConverter(new OauthServerTypeConverter());
     }
 
-    public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {
+    public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService, CustomUserDetailsService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     public HttpSecurity addExceptionHandling(HttpSecurity httpSecurity) throws Exception {
@@ -73,8 +74,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     @Profile("local")
-    public SecurityFilterChain localSecurityFilterChain(HttpSecurity http,
-                                                        UserRepository userRepository) throws Exception {
+    public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
@@ -83,7 +83,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return addExceptionHandling(http).build();
     }
@@ -98,7 +98,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class);
         return addExceptionHandling(http).build();
     }
 

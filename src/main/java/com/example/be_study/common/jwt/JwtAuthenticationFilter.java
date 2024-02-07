@@ -1,14 +1,18 @@
 package com.example.be_study.common.jwt;
 
 import com.example.be_study.common.response.DataResponse;
+import com.example.be_study.service.user.service.CustomUserDetailsService;
+import io.jsonwebtoken.Claims;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -20,9 +24,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    public JwtAuthenticationFilter(JwtTokenUtil jwtTokenUtil, JwtService jwtService) {
+    private final CustomUserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(JwtTokenUtil jwtTokenUtil, JwtService jwtService, CustomUserDetailsService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -34,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.isNotBlank(token)) {
             tokenValidation(token);
 
-            Authentication authentication = jwtTokenUtil.getAuthentication(token, TokenType.AccessToken);
+            Authentication authentication = this.getAuthentication(token, TokenType.AccessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
@@ -53,5 +60,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtService.isUnauthorized(token, TokenType.AccessToken)) { // 권한이 없는 경우
             new DataResponse<>(JwtResponseMessage.TOKEN_PERMISSION_ERROR_MESSAGE);
         }
+    }
+
+    /**
+     *  권한 정보 획득
+     */
+    public UsernamePasswordAuthenticationToken getAuthentication(String token, TokenType tokenType) {
+        Claims claims = jwtTokenUtil.getClaims(token, tokenType);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 }
