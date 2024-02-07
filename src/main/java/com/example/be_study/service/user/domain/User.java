@@ -1,6 +1,7 @@
 package com.example.be_study.service.user.domain;
 
 import com.example.be_study.service.base.AbstractBaseUserDeleteEntity;
+import com.example.be_study.service.user.dto.UserSignUpRequest;
 import com.example.be_study.service.user.enums.DeviceType;
 import com.example.be_study.service.user.enums.ProviderType;
 import com.example.be_study.service.user.enums.UserType;
@@ -76,11 +77,11 @@ public class User extends AbstractBaseUserDeleteEntity {
                 .build();
     }
 
-    public static User ofOrigin(String userEmail, PasswordEncoder passwordEncoder, String userPassword, String userNickName) {
+    public static User ofOrigin(UserSignUpRequest request, PasswordEncoder passwordEncoder) {
         return User.builder()
-                .userEmail(userEmail)
-                .userPassword(passwordEncoder.encode(userPassword))
-                .userNickName(userNickName)
+                .userEmail(request.getUserEmail())
+                .userPassword(passwordEncoder.encode(request.getUserPassword()))
+                .userNickName(request.getUserNickname())
                 .providerType(ProviderType.ORIGIN)
                 .dormancy(false)
                 .userType(UserType.BASIC_USER)

@@ -114,7 +114,7 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = false)
     public DataResponse<UserSignUpResponse> userSignUp(UserSignUpRequest request) {
-        User user = userRepository.save(User.ofOrigin(request.getUserEmail(), passwordEncoder, request.getUserPassword(), request.getUserNickname()));
+        User user = userRepository.save(User.ofOrigin(request, passwordEncoder));
 
         policyAgreeService.saveSignUpPolicy(user.getId(), request.getPolicyTypeList()); // 약관 동의
 
@@ -131,6 +131,8 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = false)
     public DataResponse<UserRefreshAccessTokenResponse> refreshAccessToken(UserRefreshTokenRequest request) {
+        // TODO : 재발급 API 수정하기
+
         if (jwtTokenUtil.isExpired(request.getRefreshToken(), TokenType.RefreshToken)) {
             return new DataResponse<>(JwtResponseMessage.TOKEN_EXPIRED_MESSAGE);
         }
