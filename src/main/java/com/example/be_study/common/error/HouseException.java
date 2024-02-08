@@ -17,4 +17,9 @@ public abstract class HouseException extends RuntimeException {
         this.errorMessage = errorMessage;
         e.printStackTrace();
     }
+
+    @Override
+    public String getMessage() {
+        return this.errorMessage;
+    }
 }

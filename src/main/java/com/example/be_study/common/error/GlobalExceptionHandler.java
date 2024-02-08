@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserBadRequestApiException.class)
     @ResponseStatus(HttpStatus.OK)
     public DataResponse<String> badRequestApiException(UserBadRequestApiException e) {
-        log.error("Error : ", e);
         return DataResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
