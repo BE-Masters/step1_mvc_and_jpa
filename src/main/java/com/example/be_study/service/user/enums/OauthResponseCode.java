@@ -5,7 +5,8 @@ import com.example.be_study.common.response.DataResponseCode;
 public enum OauthResponseCode implements DataResponseCode {
     LOGIN_SUCCESS(200, "로그인 완료"),
     OAUTH_AUTHORIZE_SUCCESS(200, "인가 코드 정상처리"),
-    REDIRECT_FAILED(500, "리디렉션 실패")
+    REDIRECT_FAILED(500, "리디렉션 실패"),
+
     ;
 
     private final int responseStatus;

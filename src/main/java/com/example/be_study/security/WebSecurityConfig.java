@@ -18,8 +18,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -45,7 +43,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "api/v1/oauth/login/naver/**",
             "/api/v1/oauth/**",
             "/oauth2/callback/kakao",
-            "/api/v1/mail", "/api/v1/mail/**"
+            "/api/v1/mail", "/api/v1/mail/**",
+            "/api/v1/user/info"
     };
 
 
@@ -94,7 +93,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(토큰 방식 사용)
-                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests // 권한 설정
+                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().permitAll()
                 )
