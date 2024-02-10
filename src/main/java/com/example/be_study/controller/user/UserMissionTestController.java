@@ -5,22 +5,25 @@ import com.example.be_study.security.CurrentUser;
 import com.example.be_study.service.user.dto.UserMetricPagingResponse;
 import com.example.be_study.service.user.dto.UserPrincipalResponse;
 import com.example.be_study.service.user.enums.OauthResponseCode;
-import com.example.be_study.service.user.enums.UserResponseMessage;
 import com.example.be_study.service.user.repository.AdminOnly;
 import com.example.be_study.service.user.repository.UserPrincipal;
 import com.example.be_study.service.user.service.UserMetricService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserMissionTestController {
 
     private final UserMetricService userMetricService;
+
 
     public UserMissionTestController(UserMetricService userMetricService) {
         this.userMetricService = userMetricService;
@@ -42,5 +45,10 @@ public class UserMissionTestController {
         return userMetricService.paging(pageable);
     }
 
+    @GetMapping("/count-by-age-group")
+    public ResponseEntity<Map<String, Long>> getUserByAge(){
+        Map<String, Long> ageGroupCount = userMetricService.countUsersByAgeGroup();
+        return ResponseEntity.ok(ageGroupCount);
+    }
 
 }
