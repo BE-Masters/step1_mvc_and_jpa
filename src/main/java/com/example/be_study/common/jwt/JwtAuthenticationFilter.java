@@ -1,7 +1,7 @@
 package com.example.be_study.common.jwt;
 
 import com.example.be_study.common.response.DataResponse;
-import com.example.be_study.service.user.service.UserService;
+import com.example.be_study.security.HouseUserDetailService;
 import io.jsonwebtoken.Claims;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
@@ -11,10 +11,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserService userService;
+    private HouseUserDetailService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,9 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             tokenValidation(token);
 
             UserDetails userDetails = getUserPrincipal(token);
-            logger.info(String.format("사용자:  %s, 요청 url: @(%s), %s", userDetails.getUsername(), request.getMethod(), request.getRequestURL()));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            logger.info(String.format("사용자:  %s, 요청 url: @(%s), %s", userDetails.getUsername(), request.getMethod(), request.getRequestURL()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
@@ -51,8 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private UserDetails getUserPrincipal(String token) {
         Claims claims = jwtTokenUtil.getClaims(token, TokenType.AccessToken);
-
-        return userService.loadUserBy(Long.parseLong(claims.getSubject()), claims);
+        return userService.loadUserBy(claims);
     }
 
     private void debugLogging(HttpServletRequest request) {

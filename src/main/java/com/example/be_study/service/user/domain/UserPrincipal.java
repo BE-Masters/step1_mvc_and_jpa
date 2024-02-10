@@ -1,35 +1,33 @@
 package com.example.be_study.service.user.domain;
 
-import io.jsonwebtoken.Claims;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class UserPrincipal implements UserDetails {
 
     private User user;
-    private Claims claims;
+    private List<GrantedAuthority> authorities = new ArrayList<>();
+    private final String ROLE_PRE_FIX = "ROLE_"; //권한 앞에 무조건 붙여야 권한 체크가 가능해집니다
 
-    public UserPrincipal(User user, Claims claims) {
+    public UserPrincipal(User user) {
         this.user = user;
-        this.claims = claims;
+        authorities.add(new SimpleGrantedAuthority(ROLE_PRE_FIX + user.getUserType().toString()));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<String> roles = new ArrayList<>();
-        roles.add(claims.get("roles", String.class));
-
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return authorities;
     }
 
     @Override
@@ -61,4 +59,5 @@ public class UserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return this.user.getDormancy();
     }
+
 }

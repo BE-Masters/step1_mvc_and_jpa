@@ -1,4 +1,4 @@
-package com.example.be_study.service.user.service;
+package com.example.be_study.security;
 
 import com.example.be_study.service.user.domain.User;
 import com.example.be_study.service.user.domain.UserPrincipal;
@@ -18,11 +18,11 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class UserService {
+public class HouseUserDetailService implements UserDetailsService {
 
     public UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public HouseUserDetailService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -34,5 +34,26 @@ public class UserService {
     public User saveUser(User user) {
         return userRepository
                 .findByProviderKey(user.getProviderKey()).orElseGet(() -> userRepository.save(user));
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetails loadUserBy(Claims claims) {
+        Long userId = Long.parseLong(claims.getSubject());
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UserBadRequestApiException(UserResponseMessage.NOT_FOUND_USER));
+
+        return new UserPrincipal(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+        User user = userRepository.findById(Long.parseLong(id))
+                .orElseThrow(() -> {
+                    log.error(id.toString());
+                    return new UsernameNotFoundException("User not found with userId : " + id);
+                });
+
+        return new UserPrincipal(user);
     }
 }
