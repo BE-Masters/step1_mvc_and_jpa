@@ -1,10 +1,12 @@
 package com.example.be_study.controller.sql;
 
 import com.example.be_study.service.user.service.UserMetricService;
-import com.example.be_study.service.user.service.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 해당 컨트롤러는 실험적 컨트롤러입니다
@@ -24,5 +26,12 @@ public class SqlController {
     public void createVeryManyUser() {
 
        userService.createVeryManyUser();
+    }
+
+
+
+    @GetMapping("/user-statistics-list")
+    public String getUserStatisticsList(){
+        return userService.getUserStatisticsList();
     }
 }

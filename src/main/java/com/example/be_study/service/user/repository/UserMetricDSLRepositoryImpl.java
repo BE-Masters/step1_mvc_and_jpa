@@ -4,6 +4,7 @@ import com.example.be_study.service.user.domain.QUserMetric;
 import com.example.be_study.service.user.domain.UserMetric;
 import com.example.be_study.service.user.enums.DeviceType;
 import com.example.be_study.service.user.enums.ProviderType;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -58,6 +59,17 @@ public class UserMetricDSLRepositoryImpl implements UserMetricDSLRepository {
         return Optional.ofNullable(jpaQueryFactory.selectFrom(userMetric)
                 .orderBy(userMetric.userId.desc())
                 .fetchFirst());
+    }
+
+    @Override
+    public List<Short> getUserAgeStatistics() {
+        QUserMetric userMetric = QUserMetric.userMetric;
+        JPAQuery<Integer> query= new JPAQuery<>(entityManager);
+        List<Short> ages = query.select(userMetric.age)
+                .from(userMetric)
+                .where(userMetric.age.between(20,100))
+                .fetch();
+        return ages;
     }
 
     @Override
