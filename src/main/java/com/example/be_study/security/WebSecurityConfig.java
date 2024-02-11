@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -62,9 +61,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new HouseUserDetailService(userRepository);
     }
+
     @Bean
     public JwtAuthenticationFilter tokenAuthenticationFilter() {
         return new JwtAuthenticationFilter();
@@ -92,7 +92,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     }
 
 
-
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new OauthServerTypeConverter());
@@ -116,7 +115,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .requestMatchers(RESOURCE_PERMIT_ALL).permitAll()
 
-                        .anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
+                        //.anyRequest().hasAnyRole("BASIC_USER", "ADMIN")
+                        .anyRequest().permitAll()
                 )
                 .userDetailsService(userDetailsService())
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
