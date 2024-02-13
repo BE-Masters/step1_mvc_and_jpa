@@ -1,10 +1,7 @@
 package com.example.be_study.service.admin.service;
 
 import com.example.be_study.common.response.DataResponse;
-import com.example.be_study.service.admin.dto.AdminUserInfoDto;
-import com.example.be_study.service.admin.dto.AdminUserListRequest;
-import com.example.be_study.service.admin.dto.AdminUserListResponse;
-import com.example.be_study.service.admin.dto.PagingDto;
+import com.example.be_study.service.admin.dto.*;
 import com.example.be_study.service.admin.enums.AdminResponseMessage;
 import com.example.be_study.service.admin.repository.AdminUserCustomRepository;
 import org.modelmapper.ModelMapper;
@@ -34,5 +31,13 @@ public class AdminService {
         PagingDto pagingDto = modelMapper.map(userList, PagingDto.class);
 
         return new DataResponse<>(AdminResponseMessage.SUCCESS, AdminUserListResponse.of(pagingDto, userList.getContent()));
+    }
+
+    /**
+     * 사용자 연령대별 카운트
+     */
+    @Transactional(readOnly = true)
+    public DataResponse<UserAgeCount> userAgeCount() {
+        return new DataResponse<>(AdminResponseMessage.SUCCESS, adminUserCustomRepository.userAgeCount());
     }
 }

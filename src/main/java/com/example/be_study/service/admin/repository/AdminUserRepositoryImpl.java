@@ -3,8 +3,10 @@ package com.example.be_study.service.admin.repository;
 import com.example.be_study.service.admin.dto.AdminUserInfoDto;
 import com.example.be_study.service.admin.dto.AdminUserListRequest;
 import com.example.be_study.service.admin.dto.PagingRequest;
+import com.example.be_study.service.admin.dto.UserAgeCount;
 import com.example.be_study.service.user.domain.QUserMetric;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -46,5 +48,56 @@ public class AdminUserRepositoryImpl implements AdminUserCustomRepository {
                 .fetchOne()).orElse(0L);
 
         return new PageImpl<>(result, paging, total);
+    }
+
+    /**
+     * 사용자 연령대별 카운트
+     */
+    @Override
+    public UserAgeCount userAgeCount(){
+        return queryFactory.select(Projections.constructor(UserAgeCount.class,
+                        new CaseBuilder()
+                                .when(userMetric.age.between(20, 29))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(30, 39))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(40, 49))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(50, 59))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(60, 69))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(70, 79))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(80, 89))
+                                .then(1)
+                                .otherwise(0)
+                                .sum(),
+                        new CaseBuilder()
+                                .when(userMetric.age.between(90, 99))
+                                .then(1)
+                                .otherwise(0)
+                                .sum()
+                ))
+                .from(userMetric)
+                .fetchOne();
     }
 }

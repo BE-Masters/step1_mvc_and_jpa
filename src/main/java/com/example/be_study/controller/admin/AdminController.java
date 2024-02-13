@@ -4,6 +4,7 @@ import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.service.admin.annotation.AuthAdmin;
 import com.example.be_study.service.admin.dto.AdminUserListRequest;
 import com.example.be_study.service.admin.dto.AdminUserListResponse;
+import com.example.be_study.service.admin.dto.UserAgeCount;
 import com.example.be_study.service.admin.service.AdminService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,15 @@ public class AdminController {
     @GetMapping(value = "/user-list", name = "사용자 목록 조회")
     public DataResponse<AdminUserListResponse> adminUserList(AdminUserListRequest request) {
         DataResponse<AdminUserListResponse> response = adminService.adminUserList(request);
+        return response;
+    }
+
+    /**
+     * 사용자 연령대별 카운트
+     */
+    @GetMapping(value = "/user-age-list", name = "사용자 연령대별 카운트")
+    public DataResponse<UserAgeCount> userAgeCount() {
+        DataResponse<UserAgeCount> response = adminService.userAgeCount();
         return response;
     }
 }
