@@ -4,19 +4,16 @@ import com.example.be_study.common.jwt.JwtTokenUtil;
 import com.example.be_study.common.jwt.TokenType;
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.service.user.domain.User;
-import com.example.be_study.service.user.domain.UserPrincipal;
 import com.example.be_study.service.user.enums.OauthResponseCode;
 import com.example.be_study.service.user.enums.OauthServerType;
 import com.example.be_study.service.user.service.OauthService;
 import com.example.be_study.utils.AdminCheck;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.stream.Collectors;
 
 @RequestMapping("/api/v1/oauth")
@@ -50,16 +47,11 @@ public class OauthController {
         return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS,login);
     }
 
-    @GetMapping("/check") // principal 데이터 가져오기 test
-    public String roleCheck(Authentication authentication) {
-        String result;
+    @AdminCheck
+    @GetMapping("/check")
+    public DataResponse<String> roleCheck(Authentication authentication){
         UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         String role = userDetails.getAuthorities().stream().map(r -> String.valueOf(r)).collect(Collectors.joining(","));
-        if(role.equals("ADMIN")){
-            result = "어드민입니다";
-        }else{
-            result = "유저입니다";
-        }
-        return result;
+        return new DataResponse<>(OauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, role);
     }
 }

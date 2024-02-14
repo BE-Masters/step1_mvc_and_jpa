@@ -63,8 +63,8 @@ spring:
               - profile_nickname
               - account_email
           naver:
-            client-id: ${NAVER_CLIENT_ID}
-            client-secret: ${NAVER_CLIENT_SECRET}
+            client-id: sXNYsDosHeWubtWXMSmo
+            client-secret: dGPLb4AO9i
             redirect-uri: http://localhost:8080/naverCallback.html
             authorization-grant-type: authorization_code
             scope: name, email
@@ -152,8 +152,8 @@ spring:
               - profile_nickname
               - account_email
           naver:
-            client-id: ${NAVER_CLIENT_ID}
-            client-secret: ${NAVER_CLIENT_SECRET}
+            client-id: sXNYsDosHeWubtWXMSmo
+            client-secret: dGPLb4AO9i
             redirect-uri: http://localhost:8080/naverCallback.html
             authorization-grant-type: authorization_code
             scope: name, email
