@@ -18,11 +18,9 @@ public class AuthorizationChecker {
     @Before("@annotation(AdminOnly)")
     public void check(JoinPoint joinPoint){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Authorities: " + authentication.getAuthorities().toString());
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
-        log.info("Is Admin: " + isAdmin);
         if (!isAdmin){
             throw new AccessDeniedException("Admin 권한이 없습니다. ");
         }

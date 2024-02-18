@@ -1,12 +1,9 @@
 package com.example.be_study.service.user.service;
 
 import com.example.be_study.service.user.domain.UserMetric;
-import com.example.be_study.service.user.dto.UserMetricPagingResponse;
 import com.example.be_study.service.user.repository.UserMetricRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +13,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserMetricService {
     public UserMetricRepository userMetricRepository;
+    private static final int AGE_GROUP = 0;
+    private static final int USER_COUNT = 1;
 
     public UserMetricService(UserMetricRepository userMetricRepository) {
         this.userMetricRepository = userMetricRepository;
@@ -28,32 +27,29 @@ public class UserMetricService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserMetricPagingResponse> paging(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;
-        int pageLimit = 50; // 한 페이지에 보여줄 데이터 수
+    public Page<UserMetric> paging(Pageable pageable) {
 
-        Page<UserMetric> userMetricPage = userMetricRepository.findAll(PageRequest.of(page, pageLimit,
-                Sort.by(Sort.Direction.ASC, "userId")));
+        Page<UserMetric> userMetricPage = userMetricRepository.findAll(pageable);
 
-        Page<UserMetricPagingResponse> userMetricPagingResponsesDto = userMetricPage.map(
-                userMetric -> new UserMetricPagingResponse(
+        Page<UserMetric> userMetrics = userMetricPage.map(
+                userMetric -> new UserMetric(
                         userMetric.getUserId(),
                         userMetric.getAge(),
                         userMetric.getDeviceType()));
 
-        return userMetricPagingResponsesDto;
+        return userMetrics;
     }
 
     public Map<String, Long> countUsersByAgeGroup() {
         List<Object[]> results = userMetricRepository.countUsersByAgeGroup();
 
         return results.stream()
-                .sorted(Comparator.comparing(result -> getAgeGroupOrder((String) result[0])))
+                .sorted(Comparator.comparing(result -> getAgeGroupOrder((String) result[AGE_GROUP])))
                 .collect(Collectors.toMap(
-                        result -> (String) result[0], // 연령대
-                        result -> (Long) result[1], // 사용자 수
+                        result -> (String) result[AGE_GROUP],
+                        result -> (Long) result[USER_COUNT],
                         (oldValue, newValue) -> oldValue,
-                        LinkedHashMap::new)); // 제발 ! 좀! 순서대로! 들어가라고오오오
+                        LinkedHashMap::new));
     }
 
     private int getAgeGroupOrder(String ageGroup) {

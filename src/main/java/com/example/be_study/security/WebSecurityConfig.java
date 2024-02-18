@@ -4,16 +4,13 @@ import com.example.be_study.common.jwt.JwtAuthenticationFilter;
 import com.example.be_study.common.jwt.JwtService;
 import com.example.be_study.common.jwt.JwtTokenUtil;
 import com.example.be_study.service.oauth.OauthServerTypeConverter;
-import com.example.be_study.service.oauth.UserAuthenticationProvider;
 import com.example.be_study.service.user.repository.UserRepository;
 import com.example.be_study.service.user.service.UserDetailService;
 import io.netty.handler.codec.http.HttpMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,13 +25,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebSecurityConfig implements WebMvcConfigurer {
 
     private final JwtTokenUtil jwtTokenUtil;
-
     private final JwtService jwtService;
-
     private final UserDetailService userDetailsService;
 
-    private final UserAuthenticationProvider userAuthenticationProvider;
 
+    public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService, UserDetailService userDetailsService ) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
     private final static String[] PERMIT_ALL = {
             "/api/v1/sign-up/**",
@@ -46,6 +45,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "/api/v1/mail", "/api/v1/mail/**",
             "/api/v1/user/info"
     };
+
 
 
     @Override
@@ -68,22 +68,12 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         registry.addConverter(new OauthServerTypeConverter());
     }
 
-    public WebSecurityConfig(JwtTokenUtil jwtTokenUtil, JwtService jwtService, UserDetailService userDetailsService, UserAuthenticationProvider userAuthenticationProvider) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-        this.userAuthenticationProvider = userAuthenticationProvider;
-    }
+
 
     public HttpSecurity addExceptionHandling(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.exceptionHandling((authenticationManager) -> authenticationManager
                 .authenticationEntryPoint(new WebAuthenticationEntryPoint())
         );
-    }
-
-    @Autowired
-    public void configure (AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(userAuthenticationProvider);
     }
 
     @Bean

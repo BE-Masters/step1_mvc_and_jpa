@@ -1,5 +1,6 @@
 package com.example.be_study.service.user.dto;
 
+import com.example.be_study.service.user.repository.UserPrincipal;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +19,11 @@ public class UserPrincipalResponse {
         this.userEmail = userEmail;
     }
 
+    public static UserPrincipalResponse of(UserPrincipal userPrincipal){
+        return UserPrincipalResponse.builder()
+                .userId(userPrincipal.getUserId())
+                .userNickName(userPrincipal.getUserNickName())
+                .userEmail(userPrincipal.getUserEmail())
+                .build();
+    }
 }
