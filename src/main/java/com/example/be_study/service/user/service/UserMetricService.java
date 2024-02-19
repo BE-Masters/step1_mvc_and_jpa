@@ -38,7 +38,7 @@ public class UserMetricService {
 
         StopWatch stopWatch2 = new StopWatch();
         stopWatch2.start();
-        Map<Integer, List<Short>> ageMapping = ages.stream().collect(Collectors.groupingBy(it -> {
+        Map<Integer, List<Short>> ageMapping = ages.parallelStream().collect(Collectors.groupingBy(it -> {
             int div = (it / 10);
             return div * 10;
         }));
