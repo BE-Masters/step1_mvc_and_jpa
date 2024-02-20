@@ -18,11 +18,9 @@ public interface UserMetricRepository extends JpaRepository<UserMetric, Long>, U
             "WHEN um.age BETWEEN 70 AND 79 THEN '70대' " +
             "WHEN um.age BETWEEN 80 AND 89 THEN '80대' " +
             "WHEN um.age >= 90 THEN '90대 이상' " +
-            "END AS ageGroup, COUNT(um) AS totalCnt " +
+            "END AS ageGroup, COUNT(*) AS totalCnt " +
             "FROM UserMetric um " +
-            "GROUP BY ageGroup " +
-            "ORDER BY MIN(um.age)")
+            "GROUP BY ageGroup ")
     List<Object[]> countUsersByAgeGroup();
-
 
 }
