@@ -4,7 +4,6 @@ import com.example.be_study.service.user.domain.QUserMetric;
 import com.example.be_study.service.user.domain.UserMetric;
 import com.example.be_study.service.user.repository.UserMetricRepository;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
@@ -86,6 +85,23 @@ public class UserMetricService {
         else if (age >= 80 && age <= 89) return "80대";
         else if (age >= 90) return "90대 이상";
         return "기타";
+    }
+    // Map<userId, List<Userid를 가진 유저정보>>
+    public Map<Long, List<UserMetric>> userInfGrouping() {
+        List<UserMetric> userMetricsList = userMetricRepository.findAll();
+
+        return userMetricsList.stream()
+                .limit(100)
+                .collect(Collectors.groupingBy(UserMetric::getUserId));
+    }
+
+    // 키-값이랑 쌍으로 이루어져있음
+    public Map<Long, UserMetric> userInfoToMap() {
+        List<UserMetric> userMetricsList = userMetricRepository.findAll();
+
+        return userMetricsList.stream()
+                .limit(100)
+                .collect(Collectors.toMap(UserMetric::getUserId, userMetric-> userMetric));
     }
 
 }
