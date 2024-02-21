@@ -46,12 +46,4 @@ public class OauthController {
         System.out.println("accessToken: Bearer "+accessToken);
         return new DataResponse<>(OauthResponseCode.LOGIN_SUCCESS,login);
     }
-
-    @AdminCheck
-    @GetMapping("/check")
-    public DataResponse<String> roleCheck(Authentication authentication){
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
-        String role = userDetails.getAuthorities().stream().map(r -> String.valueOf(r)).collect(Collectors.joining(","));
-        return new DataResponse<>(OauthResponseCode.OAUTH_AUTHORIZE_SUCCESS, role);
-    }
 }

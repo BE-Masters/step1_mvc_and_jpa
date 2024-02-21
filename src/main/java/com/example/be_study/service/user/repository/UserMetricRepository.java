@@ -5,10 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserMetricRepository extends JpaRepository<UserMetric, Long>, UserMetricDSLRepository {
     Page<UserMetric> findAll(Pageable pageable);
 
-    Map<String, Long> getUserAgeGroup();
+    List getUserAgeGroup();
+
+    List<UserMetric> findTop100ByOrderByUserIdDesc();
 }
