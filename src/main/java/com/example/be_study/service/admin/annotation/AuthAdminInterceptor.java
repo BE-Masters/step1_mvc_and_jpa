@@ -22,17 +22,12 @@ public class AuthAdminInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (handler instanceof HandlerMethod handlerMethod) {
-            AuthAdmin authAdmin = handlerMethod.getMethodAnnotation(AuthAdmin.class);
-            if (authAdmin != null) {
-                String accessToken = request.getHeader("Authorization");
-                accessToken = accessToken.substring(7);
+        if (handler instanceof HandlerMethod handlerMethod && handlerMethod.getMethodAnnotation(AuthAdmin.class) != null) {
+            String accessToken = request.getHeader("Authorization");
+            accessToken = accessToken.substring(7);
 
-                if (jwtTokenUtil.getRoles(accessToken, TokenType.AccessToken).equals(UserType.ADMIN)) {
-                    return true;
-                } else {
-                    throw new UserBadRequestApiException(UserResponseMessage.INVALID_AUTH_USER);
-                }
+            if (!jwtTokenUtil.getRoles(accessToken, TokenType.AccessToken).equals(UserType.ADMIN)) {
+                throw new UserBadRequestApiException(UserResponseMessage.INVALID_AUTH_USER);
             }
         }
         return true;

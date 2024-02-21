@@ -1,7 +1,6 @@
 package com.example.be_study.service.admin.repository;
 
 import com.example.be_study.service.admin.dto.AdminUserInfoDto;
-import com.example.be_study.service.admin.dto.AdminUserListRequest;
 import com.example.be_study.service.admin.dto.PagingRequest;
 import com.example.be_study.service.admin.dto.UserAgeCount;
 import com.example.be_study.service.user.domain.QUserMetric;
@@ -32,8 +31,8 @@ public class AdminUserRepositoryImpl implements AdminUserCustomRepository {
      *  사용자 목록 조회
      */
     @Override
-    public Page<AdminUserInfoDto> findAll(AdminUserListRequest request) {
-        Pageable paging = new PagingRequest(request.getPage(), request.getSize()).of();
+    public Page<AdminUserInfoDto> findAll(Pageable request) {
+        Pageable paging = new PagingRequest(request.getPageNumber(), request.getPageSize()).of();
 
         List<AdminUserInfoDto> result = queryFactory
                 .select(Projections.constructor(AdminUserInfoDto.class,

@@ -6,6 +6,7 @@ import com.example.be_study.service.admin.enums.AdminResponseMessage;
 import com.example.be_study.service.admin.repository.AdminUserCustomRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,7 @@ public class AdminService {
      *  사용자 목록 조회
      */
     @Transactional(readOnly = true)
-    public DataResponse<AdminUserListResponse> adminUserList(AdminUserListRequest request) {
+    public DataResponse<AdminUserListResponse> adminUserList(Pageable request) {
         Page<AdminUserInfoDto> userList = adminUserCustomRepository.findAll(request);
 
         PagingDto pagingDto = modelMapper.map(userList, PagingDto.class);

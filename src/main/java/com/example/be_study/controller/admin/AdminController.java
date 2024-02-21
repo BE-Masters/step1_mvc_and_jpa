@@ -2,10 +2,11 @@ package com.example.be_study.controller.admin;
 
 import com.example.be_study.common.response.DataResponse;
 import com.example.be_study.service.admin.annotation.AuthAdmin;
-import com.example.be_study.service.admin.dto.AdminUserListRequest;
 import com.example.be_study.service.admin.dto.AdminUserListResponse;
 import com.example.be_study.service.admin.dto.UserAgeCount;
 import com.example.be_study.service.admin.service.AdminService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,7 @@ public class AdminController {
      *  사용자 목록 조회
      */
     @GetMapping(value = "/user-list", name = "사용자 목록 조회")
-    public DataResponse<AdminUserListResponse> adminUserList(AdminUserListRequest request) {
+    public DataResponse<AdminUserListResponse> adminUserList(@PageableDefault(page = 1, size = 10) Pageable request) {
         DataResponse<AdminUserListResponse> response = adminService.adminUserList(request);
         return response;
     }
