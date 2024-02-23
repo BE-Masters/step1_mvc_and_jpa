@@ -25,7 +25,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    
     //spring webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 

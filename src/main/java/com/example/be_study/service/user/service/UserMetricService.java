@@ -6,6 +6,7 @@ import com.example.be_study.service.user.repository.UserMetricRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserMetricService {
     public UserMetricRepository userMetricRepository;
-    private static final int AGE_GROUP = 0;
-    private static final int USER_COUNT = 1;
 
     private final EntityManager entityManager;
 
@@ -49,6 +48,7 @@ public class UserMetricService {
         return userMetrics;
     }
 
+    @Cacheable("userAgeCache")
     public Map<String, Long> countUsersByAgeGroup() {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QUserMetric um = QUserMetric.userMetric;
