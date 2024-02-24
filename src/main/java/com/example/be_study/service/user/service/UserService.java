@@ -1,9 +1,15 @@
 package com.example.be_study.service.user.service;
 
 import com.example.be_study.service.user.domain.User;
+import com.example.be_study.service.user.domain.UserPrincipal;
+import com.example.be_study.service.user.enums.UserResponseMessage;
+import com.example.be_study.service.user.exception.UserBadRequestApiException;
 import com.example.be_study.service.user.repository.UserMetricRepository;
 import com.example.be_study.service.user.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,5 +36,9 @@ public class UserService {
                 .findByProviderKey(user.getProviderKey()).orElseGet(() -> userRepository.save(user));
     }
 
-
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUserName(Long userId, Claims claims) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("err_username_not_found"));
+        return new UserPrincipal(user, claims);
+    }
 }

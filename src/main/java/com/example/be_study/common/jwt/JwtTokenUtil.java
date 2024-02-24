@@ -11,12 +11,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class JwtTokenUtil {
 
     private final JwtProperties jwtProperties;
