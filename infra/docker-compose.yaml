@@ -1,5 +1,23 @@
-version: '3.6'
+version: '3.8'
 services:
+  localstack:
+    container_name: "house-local-stack"
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=${SERVICES-s3}
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOST_TMP_FOLDER=${TMPDIR}
+      - DEFAULT_REGION=ap-southeast-2
+      - HOSTNAME_EXTERNAL=localstack
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
   mysql:
     container_name: house-mysql
     image: mysql:8.0
@@ -14,3 +32,17 @@ services:
     ports:
       - 3306:3306
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+  redis:
+    container_name: house-redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    restart: always
+    command: redis-server /usr/local/conf/redis.conf

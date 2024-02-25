@@ -19,6 +19,10 @@ public enum PolicyType {
     public static final List<PolicyType> SIGN_ALL_LIST = Stream.concat(SIGN_REQUIRED_LIST.stream(), SIGN_OPTION_LIST.stream())
             .collect(Collectors.toList());
 
+    public static boolean isRequiredType(PolicyType checkType){
+        return SIGN_REQUIRED_LIST.contains(checkType);
+    }
+
     PolicyType(String description) {
         this.description = description;
     }

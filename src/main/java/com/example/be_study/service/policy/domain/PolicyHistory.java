@@ -1,5 +1,6 @@
 package com.example.be_study.service.policy.domain;
 
+import com.example.be_study.service.base.AbstractBaseEntity;
 import com.example.be_study.service.base.AbstractBaseUserByEntity;
 import com.example.be_study.service.policy.enums.PolicyType;
 import jakarta.persistence.*;
@@ -15,10 +16,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table
 @AttributeOverride(name = "id", column = @Column(name = "policy_history_id"))
-@Entity
-public class PolicyHistory extends AbstractBaseUserByEntity {
+@Entity(name = "policy_history")
+public class PolicyHistory extends AbstractBaseEntity {
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "policy_type", nullable = false)
     private PolicyType policyType;
 
