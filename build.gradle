@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'checkstyle'
     id 'org.springframework.boot' version '3.2.1'
     id 'io.spring.dependency-management' version '1.1.4'
     id "org.flywaydb.flyway" version "7.2.0"
-
+    id 'org.ec4j.editorconfig' version '0.0.3'
 }
 
 
@@ -13,7 +14,6 @@ version = '0.0.1-SNAPSHOT'
 java {
     sourceCompatibility = '21'
 }
-
 
 repositories {
     mavenCentral()
@@ -100,3 +100,29 @@ flywayMigrate.dependsOn('dependencies')
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+editorconfig {
+    excludes = ['build']
+}
+
+check.dependsOn editorconfigCheck
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+checkstyle {
+    maxWarnings = 0
+    configFile = file("${rootDir}/src/main/java/com/example/be_study/common/checkstyle/naver-checkstyle-rules.xml")
+    configProperties = ["suppressionFile": "${rootDir}/src/main/java/com/example/be_study/common/checkstyle/naver-checkstyle-suppressions.xml"]
+    toolVersion = "8.24"
+    sourceSets = [sourceSets.main]
+}
+
+
